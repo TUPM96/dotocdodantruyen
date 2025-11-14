@@ -1,0 +1,474 @@
+% =====================================================================
+% PHẦN BỔ SUNG CHI TIẾT VỀ LÝ THUYẾT GCC
+% File này để insert vào main.tex sau phần 2.4
+% =====================================================================
+
+\subsection{Lý thuyết Generalized Cross-Correlation (GCC) - Chi tiết}
+
+\subsubsection{Giới thiệu chung về GCC}
+
+Generalized Cross-Correlation (GCC) là một họ các phương pháp ước lượng độ trễ thời gian (Time Delay Estimation - TDE) giữa hai tín hiệu nhận được tại hai vị trí không gian khác nhau. Phương pháp này được phát triển đầu tiên bởi Knapp và Carter (1976) \cite{knapp1976} cho ứng dụng định vị nguồn âm thanh, và sau đó được mở rộng rộng rãi sang nhiều lĩnh vực khác nhau bao gồm xử lý tín hiệu radar, sonar, địa chấn học và đặc biệt là xử lý tín hiệu sinh học.
+
+Trong bối cảnh ước lượng vận tốc dẫn truyền sợi cơ (MFCV), GCC được sử dụng để xác định độ trễ $\tau_0$ giữa tín hiệu điện cơ thu được tại hai điện cực đặt cách nhau một khoảng cố định $d$. Từ độ trễ này, vận tốc dẫn truyền được tính theo công thức:
+
+\begin{equation}
+    \text{MFCV} = \frac{d}{\tau_0}
+    \label{eq:mfcv_basic}
+\end{equation}
+
+Tuy nhiên, việc ước lượng chính xác $\tau_0$ trong môi trường có nhiễu là một thách thức lớn. GCC cung cấp một khung lý thuyết thống nhất cho phép tối ưu hóa quá trình ước lượng này thông qua việc áp dụng các bộ lọc (weighting functions) khác nhau trong miền tần số trước khi tính tương quan.
+
+\subsubsection{Mô hình tín hiệu và giả thiết}
+
+Xét hai tín hiệu sEMG $x_1(t)$ và $x_2(t)$ thu được từ hai điện cực đặt dọc theo hướng sợi cơ, cách nhau khoảng cách $d$. Trong điều kiện lý tưởng, mối quan hệ giữa hai tín hiệu này có thể được mô tả bởi mô hình:
+
+\begin{equation}
+    \begin{aligned}
+        x_1(t) &= s(t) + n_1(t) \\
+        x_2(t) &= \alpha \cdot s(t - \tau_0) + n_2(t)
+    \end{aligned}
+    \label{eq:signal_model}
+\end{equation}
+
+trong đó:
+\begin{itemize}
+    \item $s(t)$ là tín hiệu điện cơ gốc (clean signal);
+    \item $\tau_0 = d / \text{MFCV}$ là độ trễ thực tế giữa hai kênh;
+    \item $\alpha$ là hệ số suy giảm biên độ do khoảng cách và tán xạ mô ($0 < \alpha \leq 1$);
+    \item $n_1(t)$, $n_2(t)$ là nhiễu cộng tại mỗi kênh, thường giả thiết là nhiễu trắng Gaussian không tương quan với nhau.
+\end{itemize}
+
+Các giả thiết cơ bản của mô hình GCC bao gồm:
+\begin{enumerate}
+    \item Tín hiệu nguồn $s(t)$ là quá trình ngẫu nhiên dừng yếu (wide-sense stationary);
+    \item Nhiễu $n_1(t)$, $n_2(t)$ là các quá trình ngẫu nhiên dừng, không tương quan với tín hiệu nguồn;
+    \item Độ trễ $\tau_0$ là hằng số trong khoảng thời gian quan sát;
+    \item Biến dạng phi tuyến (nonlinear distortion) là không đáng kể.
+\end{enumerate}
+
+\subsubsection{Hàm tương quan chéo trong miền thời gian}
+
+Hàm tương quan chéo (Cross-Correlation Function - CCF) giữa hai tín hiệu $x_1(t)$ và $x_2(t)$ được định nghĩa như sau:
+
+\begin{equation}
+    R_{x_1 x_2}(\tau) = \mathbb{E}[x_1(t) \cdot x_2(t + \tau)] = \lim_{T \to \infty} \frac{1}{T} \int_{-T/2}^{T/2} x_1(t) \cdot x_2(t + \tau) \, dt
+    \label{eq:ccf_definition}
+\end{equation}
+
+Trong thực tế, với tín hiệu rời rạc có độ dài hữu hạn $N$ mẫu, hàm tương quan chéo được tính bằng công thức ước lượng không chệch (unbiased estimator):
+
+\begin{equation}
+    \hat{R}_{x_1 x_2}[m] = \frac{1}{N - |m|} \sum_{n=0}^{N-|m|-1} x_1[n] \cdot x_2[n + m], \quad -N < m < N
+    \label{eq:ccf_discrete}
+\end{equation}
+
+Độ trễ được ước lượng bằng cách tìm vị trí của đỉnh cực đại của hàm tương quan:
+
+\begin{equation}
+    \hat{\tau}_0 = \arg\max_{\tau} R_{x_1 x_2}(\tau)
+    \label{eq:delay_estimate_basic}
+\end{equation}
+
+Tuy nhiên, phương pháp cơ bản này có nhiều hạn chế:
+\begin{itemize}
+    \item Đỉnh tương quan bị mờ (peak smearing) khi SNR thấp;
+    \item Độ phân giải bị giới hạn bởi chu kỳ lấy mẫu $T_s = 1/F_s$;
+    \item Nhạy cảm với nhiễu tương quan (correlated noise);
+    \item Sai lệch do biến dạng phổ của tín hiệu qua mô sinh học.
+\end{itemize}
+
+\subsubsection{Generalized Cross-Correlation trong miền tần số}
+
+Để khắc phục các hạn chế của phương pháp CC cơ bản, GCC đề xuất áp dụng bộ lọc trọng số $\Psi(\omega)$ trong miền tần số trước khi tính tương quan. Hàm GCC được định nghĩa như sau:
+
+\begin{equation}
+    R_{\text{GCC}}(\tau) = \int_{-\infty}^{\infty} \Psi(\omega) \cdot G_{x_1 x_2}(\omega) \cdot e^{j\omega\tau} \, d\omega
+    \label{eq:gcc_definition}
+\end{equation}
+
+trong đó:
+\begin{itemize}
+    \item $G_{x_1 x_2}(\omega)$ là \textbf{phổ mật độ công suất chéo} (Cross Power Spectral Density - CPSD) giữa $x_1(t)$ và $x_2(t)$:
+    \begin{equation}
+        G_{x_1 x_2}(\omega) = \mathbb{E}[X_1^*(\omega) \cdot X_2(\omega)]
+        \label{eq:cpsd}
+    \end{equation}
+
+    \item $\Psi(\omega)$ là \textbf{hàm trọng số} (weighting function hoặc processor), đặc trưng cho từng phương pháp GCC cụ thể.
+
+    \item $e^{j\omega\tau}$ là nhân tử biến đổi Fourier ngược.
+\end{itemize}
+
+Trong thực hành, CPSD được ước lượng bằng phương pháp Welch hoặc Periodogram:
+
+\begin{equation}
+    \hat{G}_{x_1 x_2}(\omega) = \frac{1}{K} \sum_{k=1}^{K} X_1^{(k)*}(\omega) \cdot X_2^{(k)}(\omega)
+    \label{eq:cpsd_estimate}
+\end{equation}
+
+với $K$ là số đoạn (segments) được trung bình hóa để giảm phương sai của ước lượng.
+
+Biểu thức GCC có thể viết lại dưới dạng tích chập:
+
+\begin{equation}
+    R_{\text{GCC}}(\tau) = \mathcal{F}^{-1}\{\Psi(\omega) \cdot G_{x_1 x_2}(\omega)\}
+    \label{eq:gcc_ifft}
+\end{equation}
+
+trong đó $\mathcal{F}^{-1}\{\cdot\}$ ký hiệu phép biến đổi Fourier ngược (Inverse FFT).
+
+\subsubsection{Phân tích phổ tín hiệu sEMG}
+
+Để hiểu rõ hơn vai trò của hàm trọng số $\Psi(\omega)$, ta phân tích CPSD của tín hiệu sEMG trong mô hình \eqref{eq:signal_model}:
+
+\begin{equation}
+    G_{x_1 x_2}(\omega) = \alpha \cdot e^{-j\omega\tau_0} \cdot S_{ss}(\omega) + G_{n_1 n_2}(\omega)
+    \label{eq:cpsd_decomposition}
+\end{equation}
+
+trong đó:
+\begin{itemize}
+    \item $S_{ss}(\omega) = \mathbb{E}[|S(\omega)|^2]$ là phổ công suất tự động của tín hiệu nguồn;
+    \item $G_{n_1 n_2}(\omega)$ là phổ công suất chéo của nhiễu (thường bằng 0 nếu nhiễu không tương quan).
+\end{itemize}
+
+Phân tích tương tự cho phổ công suất tự động:
+
+\begin{equation}
+    \begin{aligned}
+        G_{x_1 x_1}(\omega) &= S_{ss}(\omega) + G_{n_1 n_1}(\omega) \\
+        G_{x_2 x_2}(\omega) &= \alpha^2 \cdot S_{ss}(\omega) + G_{n_2 n_2}(\omega)
+    \end{aligned}
+    \label{eq:psd_decomposition}
+\end{equation}
+
+Từ đây ta thấy rằng:
+\begin{itemize}
+    \item Thành phần \textbf{pha} của $G_{x_1 x_2}(\omega)$ chứa thông tin về độ trễ: $\angle G_{x_1 x_2}(\omega) = -\omega\tau_0$;
+    \item Thành phần \textbf{biên độ} chứa thông tin về suy giảm tín hiệu và nhiễu.
+\end{itemize}
+
+Mục tiêu của các phương pháp GCC là thiết kế $\Psi(\omega)$ sao cho:
+\begin{enumerate}
+    \item Giảm thiểu ảnh hưởng của nhiễu $G_{n_1 n_2}(\omega)$;
+    \item Tối ưu hóa độ sắc nét của đỉnh tương quan;
+    \item Giảm thiểu sai lệch do biến dạng phổ.
+\end{enumerate}
+
+\subsubsection{Các phương pháp GCC chi tiết}
+
+\paragraph{1. Cross-Correlation (CC) - Phương pháp cơ sở}
+
+Phương pháp CC cơ bản không sử dụng bộ lọc nào, tức là:
+
+\begin{equation}
+    \Psi_{\text{CC}}(\omega) = 1
+    \label{eq:psi_cc}
+\end{equation}
+
+Khi đó:
+\begin{equation}
+    R_{\text{CC}}(\tau) = \mathcal{F}^{-1}\{G_{x_1 x_2}(\omega)\}
+    \label{eq:gcc_cc}
+\end{equation}
+
+\textbf{Ưu điểm:}
+\begin{itemize}
+    \item Đơn giản nhất, không cần tính phổ công suất;
+    \item Hoạt động tốt khi SNR $> 20$ dB và tín hiệu ít biến dạng;
+    \item Độ phức tạp tính toán thấp: $\mathcal{O}(N \log N)$ với FFT.
+\end{itemize}
+
+\textbf{Nhược điểm:}
+\begin{itemize}
+    \item Đỉnh tương quan bị mờ khi SNR $< 10$ dB;
+    \item Nhạy cảm với nhiễu có cấu trúc (structured noise);
+    \item Không tận dụng được thông tin về phổ của tín hiệu.
+\end{itemize}
+
+\paragraph{2. ROTH Processor}
+
+Bộ lọc Roth sử dụng nghịch đảo của phổ công suất tự động kênh đầu tiên:
+
+\begin{equation}
+    \Psi_{\text{ROTH}}(\omega) = \frac{1}{G_{x_1 x_1}(\omega)}
+    \label{eq:psi_roth}
+\end{equation}
+
+Mục đích là "làm trắng" (whitening) tín hiệu $x_1(t)$ để loại bỏ ảnh hưởng của phổ không đều.
+
+Khi đó, hàm GCC-ROTH trở thành:
+
+\begin{equation}
+    R_{\text{ROTH}}(\tau) = \mathcal{F}^{-1}\left\{\frac{G_{x_1 x_2}(\omega)}{G_{x_1 x_1}(\omega)}\right\}
+    \label{eq:gcc_roth}
+\end{equation}
+
+Thay biểu thức \eqref{eq:cpsd_decomposition} và \eqref{eq:psd_decomposition}:
+
+\begin{equation}
+    \Psi_{\text{ROTH}}(\omega) \cdot G_{x_1 x_2}(\omega) = \frac{\alpha \cdot e^{-j\omega\tau_0} \cdot S_{ss}(\omega)}{S_{ss}(\omega) + G_{n_1 n_1}(\omega)}
+    \label{eq:roth_filtered}
+\end{equation}
+
+Ta thấy:
+\begin{itemize}
+    \item Khi $G_{n_1 n_1}(\omega) \ll S_{ss}(\omega)$: $\Psi_{\text{ROTH}} \cdot G_{x_1 x_2}(\omega) \approx \alpha \cdot e^{-j\omega\tau_0}$ (lý tưởng);
+    \item Khi $G_{n_1 n_1}(\omega)$ lớn: bộ lọc khuếch đại nhiễu $\Rightarrow$ không ổn định.
+\end{itemize}
+
+\textbf{Ưu điểm:}
+\begin{itemize}
+    \item Giảm ảnh hưởng của phổ không đều của tín hiệu;
+    \item Hoạt động tốt khi SNR vừa phải (10-20 dB);
+    \item Cải thiện độ phân giải ở các tần số có năng lượng tín hiệu thấp.
+\end{itemize}
+
+\textbf{Nhược điểm:}
+\begin{itemize}
+    \item Không ổn định khi $G_{x_1 x_1}(\omega) \approx 0$ (cần điều chỉnh: $G_{x_1 x_1}(\omega) + \epsilon$);
+    \item Khuếch đại nhiễu ở các tần số có SNR thấp;
+    \item Không đối xứng: kết quả phụ thuộc vào việc chọn kênh tham chiếu.
+\end{itemize}
+
+\paragraph{3. SCOT (Smoothed Coherence Transform)}
+
+SCOT là biến thể đối xứng của ROTH, sử dụng trọng số:
+
+\begin{equation}
+    \Psi_{\text{SCOT}}(\omega) = \frac{1}{\sqrt{G_{x_1 x_1}(\omega) \cdot G_{x_2 x_2}(\omega)}}
+    \label{eq:psi_scot}
+\end{equation}
+
+Hàm GCC-SCOT:
+
+\begin{equation}
+    R_{\text{SCOT}}(\tau) = \mathcal{F}^{-1}\left\{\frac{G_{x_1 x_2}(\omega)}{\sqrt{G_{x_1 x_1}(\omega) \cdot G_{x_2 x_2}(\omega)}}\right\}
+    \label{eq:gcc_scot}
+\end{equation}
+
+Biểu thức này chính là biến đổi Fourier ngược của \textbf{hàm Coherence} (độ tương quan phổ):
+
+\begin{equation}
+    \gamma_{x_1 x_2}(\omega) = \frac{G_{x_1 x_2}(\omega)}{\sqrt{G_{x_1 x_1}(\omega) \cdot G_{x_2 x_2}(\omega)}}, \quad |\gamma_{x_1 x_2}(\omega)| \leq 1
+    \label{eq:coherence}
+\end{equation}
+
+\textbf{Ưu điểm:}
+\begin{itemize}
+    \item Đối xứng giữa hai kênh, không phụ thuộc vào lựa chọn kênh tham chiếu;
+    \item Chuẩn hóa biên độ về $[0, 1]$, giúp so sánh dễ dàng;
+    \item Hoạt động tốt trong môi trường nhiễu tần số phức tạp;
+    \item Cân bằng giữa độ chính xác và ổn định.
+\end{itemize}
+
+\textbf{Nhược điểm:}
+\begin{itemize}
+    \item Tốn thời gian tính toán hơn do phải tính cả $G_{x_1 x_1}$ và $G_{x_2 x_2}$;
+    \item Vẫn cần điều chỉnh để tránh chia cho 0;
+    \item Hiệu suất giảm khi nhiễu tương quan cao.
+\end{itemize}
+
+\paragraph{4. PHAT (Phase Transform)}
+
+PHAT chỉ giữ lại thông tin pha, loại bỏ hoàn toàn thông tin biên độ:
+
+\begin{equation}
+    \Psi_{\text{PHAT}}(\omega) = \frac{1}{|G_{x_1 x_2}(\omega)|}
+    \label{eq:psi_phat}
+\end{equation}
+
+Hàm GCC-PHAT:
+
+\begin{equation}
+    R_{\text{PHAT}}(\tau) = \mathcal{F}^{-1}\left\{\frac{G_{x_1 x_2}(\omega)}{|G_{x_1 x_2}(\omega)|}\right\} = \mathcal{F}^{-1}\left\{e^{j \angle G_{x_1 x_2}(\omega)}\right\}
+    \label{eq:gcc_phat}
+\end{equation}
+
+với $\angle G_{x_1 x_2}(\omega)$ là pha của CPSD.
+
+Trong trường hợp lý tưởng (không nhiễu): $\angle G_{x_1 x_2}(\omega) = -\omega\tau_0$, do đó:
+
+\begin{equation}
+    R_{\text{PHAT}}(\tau) = \mathcal{F}^{-1}\{e^{-j\omega\tau_0}\} = \delta(\tau - \tau_0)
+    \label{eq:phat_ideal}
+\end{equation}
+
+Đây là hàm Dirac delta, có đỉnh cực kỳ sắc nét tại $\tau = \tau_0$.
+
+\textbf{Ưu điểm:}
+\begin{itemize}
+    \item Đỉnh tương quan cực kỳ sắc nét, độ phân giải cao nhất;
+    \item Không bị ảnh hưởng bởi biến dạng biên độ phổ;
+    \item Hoạt động xuất sắc trong môi trường nhiễu trắng;
+    \item Phù hợp cho ứng dụng định vị âm thanh trong không gian tán xạ.
+\end{itemize}
+
+\textbf{Nhược điểm:}
+\begin{itemize}
+    \item Giảm độ chính xác khi nhiễu pha lớn (phase noise);
+    \item Nhạy cảm với sự mất mát thông tin tại các tần số có biên độ nhỏ;
+    \item Có thể tạo ra nhiều đỉnh giả (spurious peaks) khi SNR rất thấp;
+    \item Cần điều chỉnh: $|G_{x_1 x_2}(\omega)| + \epsilon$ để tránh chia cho 0.
+\end{itemize}
+
+\paragraph{5. ECKART Filter}
+
+Bộ lọc Eckart được thiết kế dựa trên tiêu chí \textbf{tối đa hóa độ lệch} (deflection criterion):
+
+\begin{equation}
+    \text{Deflection} = \frac{|R_{\text{GCC}}(\tau_0)|^2}{\mathbb{E}[R_{\text{GCC}}^2(\tau)]}, \quad \tau \neq \tau_0
+    \label{eq:deflection}
+\end{equation}
+
+Bộ lọc tối ưu theo tiêu chí này là:
+
+\begin{equation}
+    \Psi_{\text{ECKART}}(\omega) = \frac{|G_{x_1 x_2}(\omega)|^2}{G_{x_1 x_1}(\omega) \cdot G_{x_2 x_2}(\omega)}
+    \label{eq:psi_eckart_general}
+\end{equation}
+
+Biểu thức này có thể viết lại theo SNR:
+
+\begin{equation}
+    \Psi_{\text{ECKART}}(\omega) = \frac{\text{SNR}(\omega)}{1 + \text{SNR}(\omega)}
+    \label{eq:psi_eckart_snr}
+\end{equation}
+
+trong đó:
+
+\begin{equation}
+    \text{SNR}(\omega) = \frac{|G_{x_1 x_2}(\omega)|^2}{G_{n_1 n_1}(\omega) \cdot G_{n_2 n_2}(\omega)}
+    \label{eq:snr_frequency}
+\end{equation}
+
+Ta thấy:
+\begin{itemize}
+    \item Khi $\text{SNR}(\omega) \gg 1$: $\Psi_{\text{ECKART}}(\omega) \approx 1$ (giống CC);
+    \item Khi $\text{SNR}(\omega) \ll 1$: $\Psi_{\text{ECKART}}(\omega) \approx \text{SNR}(\omega) \approx 0$ (giảm trọng số);
+    \item Bộ lọc tự động điều chỉnh trọng số theo SNR tại từng tần số.
+\end{itemize}
+
+\textbf{Ưu điểm:}
+\begin{itemize}
+    \item Tối ưu theo tiêu chí Deflection, cho độ chính xác cao nhất về lý thuyết;
+    \item Hoạt động rất tốt khi SNR $< 10$ dB;
+    \item Tự động cân bằng giữa các vùng tần số có SNR khác nhau;
+    \item Robust với nhiễu có phổ không đều.
+\end{itemize}
+
+\textbf{Nhược điểm:}
+\begin{itemize}
+    \item Cần biết hoặc ước lượng $G_{n_1 n_1}(\omega)$, $G_{n_2 n_2}(\omega)$ $\Rightarrow$ phức tạp;
+    \item Độ phức tạp tính toán cao hơn các phương pháp khác;
+    \item Nhạy cảm với sai lệch trong ước lượng phổ nhiễu;
+    \item Hiệu suất phụ thuộc vào chất lượng ước lượng SNR.
+\end{itemize}
+
+\paragraph{6. Hannan-Thomson (HT) / Maximum Likelihood (ML)}
+
+Phương pháp HT dựa trên nguyên lý \textbf{ước lượng hợp lý cực đại} (Maximum Likelihood) với giả thiết tín hiệu và nhiễu là các quá trình Gaussian.
+
+Bộ lọc HT có dạng:
+
+\begin{equation}
+    \Psi_{\text{HT}}(\omega) = \frac{G_{x_1 x_2}(\omega)}{G_{x_1 x_1}(\omega) \cdot G_{x_2 x_2}(\omega) - |G_{x_1 x_2}(\omega)|^2}
+    \label{eq:psi_ht}
+\end{equation}
+
+Biểu thức này có thể đơn giản hóa thành:
+
+\begin{equation}
+    \Psi_{\text{HT}}(\omega) = \frac{1}{G_{x_1 x_1}(\omega) + G_{x_2 x_2}(\omega) - 2\text{Re}\{G_{x_1 x_2}(\omega)\}}
+    \label{eq:psi_ht_simplified}
+\end{equation}
+
+với $\text{Re}\{\cdot\}$ là phần thực của số phức.
+
+Một dạng đơn giản hơn thường được sử dụng trong thực hành:
+
+\begin{equation}
+    \Psi_{\text{HT}}(\omega) = \frac{1}{G_{x_1 x_1}(\omega) + G_{x_2 x_2}(\omega)}
+    \label{eq:psi_ht_practical}
+\end{equation}
+
+\textbf{Ưu điểm:}
+\begin{itemize}
+    \item Dựa trên nền tảng lý thuyết vững chắc (ML estimation);
+    \item Hoạt động tốt trên phổ rộng SNR (0-30 dB);
+    \item Cân bằng giữa độ chính xác của ECKART và đơn giản hơn;
+    \item Thích ứng tốt với sự thay đổi của điều kiện tín hiệu.
+\end{itemize}
+
+\textbf{Nhược điểm:}
+\begin{itemize}
+    \item Vẫn phức tạp hơn CC, ROTH, SCOT;
+    \item Yêu cầu tính cả hai phổ tự động $G_{x_1 x_1}$, $G_{x_2 x_2}$;
+    \item Hiệu suất phụ thuộc vào giả thiết Gaussian của tín hiệu.
+\end{itemize}
+
+\subsubsection{Nội suy Sub-sample: Phương pháp Parabolic Interpolation}
+
+Do tín hiệu rời rạc, độ phân giải ước lượng độ trễ bị giới hạn bởi chu kỳ lấy mẫu $T_s$. Để đạt độ chính xác cao hơn, cần áp dụng kỹ thuật nội suy.
+
+\textbf{Nội suy Parabolic} là phương pháp phổ biến, dựa trên giả thiết rằng hàm tương quan quanh đỉnh có dạng parabol:
+
+Giả sử đỉnh rời rạc nằm tại mẫu $m_{\max}$ với giá trị $R[m_{\max}]$, và hai mẫu lân cận là $R[m_{\max}-1]$ và $R[m_{\max}+1]$.
+
+Fit một parabol:
+\begin{equation}
+    R(\tau) = a \tau^2 + b \tau + c
+    \label{eq:parabola}
+\end{equation}
+
+qua ba điểm $(m_{\max}-1, R[m_{\max}-1])$, $(m_{\max}, R[m_{\max}])$, $(m_{\max}+1, R[m_{\max}+1])$.
+
+Vị trí đỉnh của parabol:
+\begin{equation}
+    \tau_{\text{peak}} = m_{\max} - \frac{R[m_{\max}+1] - R[m_{\max}-1]}{2(R[m_{\max}+1] - 2R[m_{\max}] + R[m_{\max}-1])}
+    \label{eq:parabolic_interpolation}
+\end{equation}
+
+Phương pháp này cho độ chính xác sub-sample tốt (thường tăng 5-10 lần), với độ phức tạp tính toán rất thấp.
+
+\subsubsection{Tóm tắt so sánh các phương pháp GCC}
+
+Bảng~\ref{tab:gcc_comparison_detailed} tổng hợp chi tiết các đặc điểm của 7 phương pháp:
+
+\begin{table}[h!]
+\centering
+\caption{So sánh chi tiết các phương pháp GCC}
+\label{tab:gcc_comparison_detailed}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\textbf{Phương pháp} & \textbf{Hàm trọng số $\Psi(\omega)$} & \textbf{Độ phức tạp} & \textbf{SNR tối ưu} & \textbf{Độ sắc nét đỉnh} & \textbf{Độ ổn định} \\
+\hline
+CC\_time & $1$ & $\mathcal{O}(N \log N)$ & $> 20$ dB & Thấp & Cao \\
+\hline
+GCC & $1$ & $\mathcal{O}(N \log N)$ & $> 15$ dB & Thấp & Cao \\
+\hline
+ROTH & $1/G_{x_1 x_1}(\omega)$ & $\mathcal{O}(N \log N)$ & $10-20$ dB & Trung bình & Trung bình \\
+\hline
+SCOT & $1/\sqrt{G_{x_1 x_1} \cdot G_{x_2 x_2}}$ & $\mathcal{O}(N \log N)$ & $5-20$ dB & Trung bình-Cao & Cao \\
+\hline
+PHAT & $1/|G_{x_1 x_2}(\omega)|$ & $\mathcal{O}(N \log N)$ & $0-30$ dB & \textbf{Rất cao} & Trung bình \\
+\hline
+ECKART & $\text{SNR}(\omega)/(1+\text{SNR}(\omega))$ & $\mathcal{O}(N \log N)$ & $< 10$ dB & Cao & \textbf{Cao} \\
+\hline
+HT (ML) & $1/(G_{x_1 x_1} + G_{x_2 x_2})$ & $\mathcal{O}(N \log N)$ & $0-20$ dB & Cao & \textbf{Cao} \\
+\hline
+\end{tabular}
+}
+\end{table}
+
+\textbf{Kết luận về lựa chọn phương pháp:}
+\begin{itemize}
+    \item \textbf{SNR cao ($> 20$ dB)}: CC\_time hoặc GCC đã đủ, đơn giản và nhanh;
+    \item \textbf{SNR trung bình (10-20 dB)}: SCOT hoặc ROTH phù hợp;
+    \item \textbf{SNR thấp ($< 10$ dB)}: PHAT, ECKART hoặc HT cho kết quả tốt nhất;
+    \item \textbf{Môi trường nhiễu phức tạp}: PHAT hoặc ECKART;
+    \item \textbf{Cần ổn định cao}: HT hoặc SCOT;
+    \item \textbf{Cần tốc độ}: CC\_time hoặc GCC.
+\end{itemize}
+
