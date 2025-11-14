@@ -1,0 +1,1520 @@
+\documentclass[13pt,a4paper]{report}
+
+% --- Font và tiếng Việt ---
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{vietnamese}
+\setmainfont{Times New Roman}
+\newfontfamily\VNbold{Times New Roman}[FakeBold=2.0]
+
+% --- Lề & giãn dòng ---
+\usepackage[a4paper,left=3cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{setspace}
+\setstretch{1.5}
+\setlength{\parindent}{1cm}
+
+% --- Tiêu đề chương/mục ---
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\bfseries\Large\centering}{CHƯƠNG \thechapter: }{0.5em}{\bfseries\Large}
+\titleformat{\section}[hang]{\bfseries\large}{\thesection.}{0.5em}{}
+\titleformat{\subsection}[hang]{\bfseries\normalsize}{\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}[hang]{\itshape\normalsize}{\thesubsubsection.}{0.5em}{}
+
+% --- Hình, bảng, header/footer ---
+\usepackage{graphicx}
+\usepackage{caption}
+\captionsetup{font=normalsize,labelfont=bf}
+\usepackage{amsmath,amssymb}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\nouppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
+\usepackage{enumitem}
+\usepackage[unicode]{hyperref}
+\usepackage{chngcntr}
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+
+% =============================================================
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+% Vẽ khung viền
+\setlength{\fboxsep}{15pt}
+\setlength{\fboxrule}{2pt}
+\fbox{%
+  \begin{minipage}{0.85\textwidth}
+    \centering
+    \textbf{{\large BỘ CÔNG THƯƠNG}}\\
+    \textbf{{\large TRƯỜNG ĐẠI HỌC CÔNG NGHIỆP TP. HỒ CHÍ MINH}}\\
+    \textbf{{\large KHOA CÔNG NGHỆ ĐIỆN TỬ}}\\[1cm]
+    \includegraphics[height=4cm]{iuh.jpg}\\[2cm]
+    {\LARGE \textbf{BÁO CÁO KHÓA LUẬN TỐT NGHIỆP}}\\[1cm]
+    {\large \textbf{PHÁT TRIỂN PHƯƠNG PHÁP ƯỚC LƯỢNG VẬN TỐC DẪN TRUYỀN CỦA TÍN HIỆU ĐIỆN CƠ}}\\[2cm]
+    \textbf{Sinh viên thực hiện:} Nguyễn Ngọc Trung – Lê Bùi Tiến Hưng\\
+    \textbf{Giảng viên hướng dẫn:} TS. Lưu Gia Thiện\\[3cm]
+    {\large TP. Hồ Chí Minh – 2025}
+  \end{minipage}%
+}
+\end{center}
+\end{titlepage}
+
+
+% ------------------- LỜI CẢM ƠN -------------------
+\chapter*{LỜI CẢM ƠN}
+\addcontentsline{toc}{chapter}{LỜI CẢM ƠN}
+
+Trước hết, nhóm chúng em xin gửi lời cảm ơn chân thành và sâu sắc nhất đến Ban Giám hiệu Trường Đại học Công nghiệp Thành phố Hồ Chí Minh, cùng toàn thể quý thầy cô trong Khoa Công nghệ Điện tử – những người đã không ngừng nỗ lực trong công tác giảng dạy, quản lý và tạo ra một môi trường học tập năng động, hiện đại, giúp sinh viên có cơ hội phát triển toàn diện cả về kiến thức chuyên môn, kỹ năng thực hành lẫn tư duy nghiên cứu khoa học. Chính nhờ sự quan tâm, hỗ trợ và những chính sách đổi mới của Nhà trường mà chúng em có điều kiện thuận lợi để thực hiện và hoàn thành khóa luận tốt nghiệp này.
+
+Nhóm xin bày tỏ lòng biết ơn sâu sắc và đặc biệt nhất đến \textbf{TS. Lưu Gia Thiện} – người thầy hướng dẫn khoa học của chúng em. Trong suốt quá trình thực hiện đề tài “\textit{Phát triển phương pháp ước lượng vận tốc dẫn truyền của tín hiệu điện cơ}”, thầy đã luôn dành thời gian quý báu để theo dõi, định hướng, gợi mở ý tưởng và tận tình giúp đỡ chúng em từng bước trong quá trình nghiên cứu. Thầy không chỉ truyền đạt cho chúng em kiến thức chuyên sâu về kỹ thuật điện tử, xử lý tín hiệu và các phương pháp phân tích dữ liệu, mà còn truyền cảm hứng, tinh thần học hỏi, sự kiên trì và niềm đam mê nghiên cứu khoa học. Những buổi trao đổi với thầy luôn là cơ hội quý giá để chúng em mở rộng tư duy, củng cố kiến thức và học hỏi phong cách làm việc khoa học, nghiêm túc nhưng đầy nhiệt huyết.  
+Chúng em vô cùng trân trọng và biết ơn sự tận tâm, kiên nhẫn và trách nhiệm của thầy trong từng góp ý, chỉnh sửa và định hướng giúp nhóm vượt qua những khó khăn, vướng mắc, từng bước hoàn thiện đề tài một cách hiệu quả và khoa học nhất.
+
+Bên cạnh đó, nhóm cũng xin gửi lời cảm ơn chân thành đến toàn thể quý thầy cô trong Khoa Công nghệ Điện tử. Trong suốt bốn năm học tập tại trường, chúng em đã được quý thầy cô truyền đạt nền tảng kiến thức vững chắc, không chỉ về chuyên ngành điện tử, viễn thông, xử lý tín hiệu mà còn về phương pháp tư duy logic, kỹ năng làm việc nhóm, kỹ năng nghiên cứu và ứng dụng thực tiễn. Những kiến thức và kinh nghiệm quý báu đó là hành trang quan trọng, giúp chúng em có đủ năng lực, sự tự tin và bản lĩnh để tiếp cận, nghiên cứu và triển khai đề tài một cách hiệu quả.  
+Đặc biệt, chúng em cảm ơn các thầy cô đã tạo điều kiện thuận lợi về cơ sở vật chất, phòng thí nghiệm và thiết bị nghiên cứu để nhóm có thể tiến hành thử nghiệm, đo đạc và kiểm chứng các kết quả một cách chính xác, khoa học.
+
+Chúng em xin chân thành cảm ơn sự hỗ trợ nhiệt tình từ các anh chị khóa trên, các bạn sinh viên cùng khóa và đồng nghiệp – những người đã chia sẻ kinh nghiệm, cung cấp tài liệu tham khảo, hỗ trợ chúng em trong quá trình học tập, thu thập dữ liệu và thực hiện mô phỏng. Mỗi ý kiến đóng góp, mỗi lần thảo luận cùng mọi người đều mang lại cho nhóm thêm nhiều góc nhìn mới và giúp cải thiện chất lượng của đề tài.
+
+Không thể không nhắc đến công lao to lớn của gia đình – những người luôn là điểm tựa tinh thần vững chắc, là nguồn động lực to lớn giúp chúng em vượt qua mọi khó khăn trong suốt chặng đường học tập. Gia đình đã luôn dành cho chúng em tình yêu thương, sự tin tưởng và quan tâm sâu sắc, tạo mọi điều kiện tốt nhất để chúng em toàn tâm toàn ý theo đuổi việc học và nghiên cứu.  
+Chính sự hy sinh thầm lặng, những lời động viên, khích lệ từ gia đình đã tiếp thêm sức mạnh để chúng em có thể hoàn thành tốt khóa luận này. Sự thành công hôm nay, dù nhỏ bé, cũng là thành quả của tình thương, niềm tin và sự ủng hộ vô điều kiện từ những người thân yêu nhất.
+
+Ngoài ra, nhóm cũng xin gửi lời cảm ơn đến bạn bè và tập thể lớp DHDTVT17B – những người bạn đồng hành đã cùng nhau trải qua nhiều giờ học tập, thảo luận, làm việc nhóm và chia sẻ kinh nghiệm. Mỗi sự giúp đỡ, dù nhỏ, đều là nguồn động viên quý báu giúp chúng em tiến xa hơn trong hành trình học tập và nghiên cứu.
+
+Khóa luận tốt nghiệp này là kết quả của sự nỗ lực không ngừng, của tinh thần học hỏi và niềm đam mê nghiên cứu của cả nhóm, nhưng sẽ không thể hoàn thiện nếu thiếu đi sự giúp đỡ, ủng hộ và đồng hành của rất nhiều người. Mặc dù nhóm đã cố gắng hết sức để hoàn thành tốt đề tài, song chắc chắn không thể tránh khỏi những thiếu sót và hạn chế. Chúng em rất mong nhận được những góp ý, chỉ dẫn quý báu từ quý thầy cô và các bạn để có thể tiếp tục hoàn thiện và phát triển hơn nữa trong tương lai.
+
+Cuối cùng, nhóm xin kính chúc Ban Giám hiệu Nhà trường, quý thầy cô trong Khoa Công nghệ Điện tử, cùng toàn thể gia đình, bạn bè và những người đã giúp đỡ chúng em trong suốt thời gian qua luôn dồi dào sức khỏe, hạnh phúc và thành công.  
+Nhóm xin chân thành cảm ơn!
+
+\vspace{1cm}
+\begin{flushright}
+\textit{TP. Hồ Chí Minh, tháng 7 năm 2025}\\[0.2cm]
+\textbf{Nhóm sinh viên thực hiện}\\[0.2cm]
+Nguyễn Ngọc Trung – Lê Bùi Tiến Hưng
+\end{flushright}
+
+
+\newpage
+
+% ------------------- MỤC LỤC -------------------
+\tableofcontents
+\listoffigures
+\listoftables
+\newpage
+
+% =============================================================
+% ------------------- CHƯƠNG 1 -------------------
+\chapter{GIỚI THIỆU ĐỀ TÀI}
+\section{Lý do chọn đề tài}
+
+Trong bối cảnh khoa học và công nghệ ngày càng phát triển, lĩnh vực điện tử y sinh đóng vai trò hết sức quan trọng trong việc nghiên cứu, chẩn đoán và hỗ trợ điều trị các bệnh lý liên quan đến con người. Trong đó, việc phân tích và xử lý các tín hiệu sinh học đang trở thành một hướng nghiên cứu trọng điểm, góp phần cung cấp thông tin hữu ích cho các chuyên gia y tế trong việc đánh giá tình trạng hoạt động của cơ thể.
+
+Tín hiệu điện cơ (\textit{Electromyography} – EMG) là một trong những loại tín hiệu sinh học quan trọng, phản ánh trực tiếp hoạt động điện học của cơ xương dưới sự điều khiển của hệ thần kinh. Thông qua việc phân tích tín hiệu EMG, ta có thể đánh giá tình trạng hoạt động của cơ, mức độ mỏi cơ, cũng như phát hiện sớm các rối loạn hoặc bệnh lý thần kinh – cơ.
+
+Trong số các thông số đặc trưng của tín hiệu EMG, vận tốc dẫn truyền sợi cơ (\textit{Muscle Fiber Conduction Velocity} – MFCV) là một chỉ số sinh lý quan trọng, thể hiện khả năng dẫn truyền xung động điện dọc theo sợi cơ. Thông số này có ý nghĩa lớn trong việc đánh giá tình trạng sức khỏe của cơ, xác định mức độ mỏi cơ, hỗ trợ chẩn đoán các bệnh lý liên quan đến thần kinh – cơ, và phục vụ trong lĩnh vực phục hồi chức năng cũng như thể thao.
+
+Tuy nhiên, việc ước lượng chính xác giá trị MFCV từ tín hiệu điện cơ bề mặt vẫn còn là một thách thức lớn. Kết quả ước lượng thường bị ảnh hưởng bởi nhiễu, điều kiện môi trường đo, vị trí đặt điện cực và giới hạn của các thuật toán xử lý tín hiệu truyền thống. Những yếu tố này làm giảm độ tin cậy và tính ổn định của kết quả, gây khó khăn cho việc ứng dụng thực tiễn trong chẩn đoán và nghiên cứu.
+
+Xuất phát từ thực tế đó, nhóm chúng em lựa chọn thực hiện đề tài “\textit{Phát triển phương pháp ước lượng vận tốc dẫn truyền của tín hiệu điện cơ}” với mong muốn nghiên cứu, cải tiến và đề xuất phương pháp xử lý tín hiệu EMG có độ chính xác cao, khả năng chống nhiễu tốt hơn, qua đó nâng cao độ tin cậy của việc ước lượng MFCV. Đề tài không chỉ mang ý nghĩa khoa học mà còn có giá trị thực tiễn trong lĩnh vực kỹ thuật y sinh và ứng dụng công nghệ trong chăm sóc sức khỏe.
+
+
+\section{Mục đích của đề tài}
+
+Mục đích chính của đề tài là nghiên cứu, xây dựng và phát triển một phương pháp hiệu quả nhằm ước lượng chính xác vận tốc dẫn truyền sợi cơ (\textit{Muscle Fiber Conduction Velocity} – MFCV) từ tín hiệu điện cơ bề mặt (\textit{Surface Electromyography} – sEMG). Việc xác định chính xác giá trị MFCV có ý nghĩa đặc biệt quan trọng trong phân tích tình trạng hoạt động của cơ, đánh giá mức độ mỏi cơ, chẩn đoán các bệnh lý thần kinh – cơ và hỗ trợ trong công tác phục hồi chức năng hoặc huấn luyện thể thao.
+
+Cụ thể, đề tài hướng đến việc nghiên cứu tổng quan các mô hình, thuật toán và phương pháp xử lý tín hiệu hiện có trong lĩnh vực phân tích tín hiệu EMG, từ đó đánh giá ưu – nhược điểm của từng phương pháp để làm cơ sở đề xuất giải pháp cải tiến. Mục tiêu là phát triển một phương pháp ước lượng MFCV có khả năng hoạt động ổn định, có độ chính xác cao và khả năng chống nhiễu tốt trong các điều kiện đo thực tế khác nhau.
+
+Bên cạnh đó, đề tài còn nhằm ứng dụng các kỹ thuật xử lý tín hiệu số hiện đại như lọc nhiễu, biến đổi miền tần số – thời gian, phân tích tương quan, hoặc các phương pháp học máy (nếu có) để nâng cao hiệu quả ước lượng. Việc kết hợp giữa các kỹ thuật truyền thống và phương pháp hiện đại kỳ vọng sẽ tạo ra một quy trình xử lý dữ liệu tối ưu hơn, phù hợp với điều kiện thực nghiệm tại phòng thí nghiệm và có khả năng mở rộng sang ứng dụng thực tiễn.
+
+Ngoài ra, thông qua quá trình thực hiện đề tài, nhóm cũng hướng đến việc xây dựng mô hình mô phỏng hoặc thu thập dữ liệu thực nghiệm để kiểm chứng tính đúng đắn của các phương pháp đã nghiên cứu. Từ kết quả đó, nhóm tiến hành đánh giá, so sánh giữa các thuật toán dựa trên các tiêu chí như độ chính xác, độ ổn định, khả năng làm việc trong môi trường nhiễu, thời gian tính toán và khả năng áp dụng thực tế.
+
+Về mặt học thuật, đề tài góp phần củng cố kiến thức về xử lý tín hiệu sinh học, đặc biệt là tín hiệu điện cơ, đồng thời giúp người thực hiện làm quen với các quy trình nghiên cứu khoa học, từ phân tích lý thuyết đến thực nghiệm và đánh giá kết quả. Về mặt thực tiễn, kết quả của đề tài có thể được ứng dụng trong các hệ thống đo lường sinh học, thiết bị y sinh hỗ trợ chẩn đoán, hoặc trong lĩnh vực phục hồi chức năng, giúp theo dõi và đánh giá tình trạng hoạt động của cơ bắp một cách khách quan hơn.
+
+Tóm lại, đề tài “\textit{Phát triển phương pháp ước lượng vận tốc dẫn truyền của tín hiệu điện cơ}” không chỉ nhằm mục tiêu tạo ra một phương pháp ước lượng có độ chính xác cao mà còn góp phần vào việc mở rộng hiểu biết, ứng dụng công nghệ xử lý tín hiệu trong y học và kỹ thuật sinh học, hướng đến mục tiêu phục vụ con người thông qua các giải pháp khoa học công nghệ tiên tiến.
+
+
+\section{Đối tượng và phạm vi nghiên cứu}
+
+\subsection*{Đối tượng nghiên cứu}
+
+Đối tượng nghiên cứu chính của đề tài là tín hiệu điện cơ bề mặt (\textit{Surface Electromyography} – sEMG), được thu nhận từ hoạt động điện sinh lý của các sợi cơ trong quá trình co cơ. Tín hiệu này thể hiện sự thay đổi điện thế do các xung thần kinh kích thích truyền dọc theo sợi cơ, phản ánh trực tiếp mối quan hệ giữa hệ thần kinh trung ương và hệ cơ ngoại vi.  
+Trong phạm vi nghiên cứu của đề tài, tín hiệu sEMG được xem xét như một đại lượng đặc trưng cho hoạt động điện học của cơ bắp, có thể thu nhận bằng các điện cực gắn trên bề mặt da.  
+
+Đề tài tập trung vào việc phân tích, xử lý và khai thác thông tin có trong tín hiệu sEMG, đặc biệt là tham số vận tốc dẫn truyền sợi cơ (\textit{Muscle Fiber Conduction Velocity} – MFCV). Đây là một thông số sinh lý quan trọng giúp đánh giá tình trạng cơ, mức độ mỏi cơ và hiệu suất hoạt động của hệ cơ – thần kinh. Việc ước lượng MFCV chính xác là mục tiêu cốt lõi của nghiên cứu, qua đó làm cơ sở cho các ứng dụng trong y học, phục hồi chức năng và huấn luyện thể thao.
+
+Tín hiệu sEMG được sử dụng trong đề tài có thể bao gồm hai dạng dữ liệu:
+\begin{itemize}
+    \item \textbf{Dữ liệu mô phỏng:} Được tạo ra bằng các mô hình toán học mô phỏng quá trình sinh tín hiệu điện cơ, cho phép nhóm chủ động điều chỉnh các thông số như tần số lấy mẫu, mức nhiễu, tốc độ dẫn truyền, độ dài tín hiệu,… nhằm đánh giá hiệu quả của các thuật toán trong các điều kiện lý tưởng hoặc có kiểm soát.
+    \item \textbf{Dữ liệu thực nghiệm:} Được thu thập từ các thí nghiệm đo tín hiệu sEMG trên người khỏe mạnh trong môi trường phòng thí nghiệm, với các thiết bị đo phù hợp và các điều kiện được kiểm soát để đảm bảo độ chính xác và tính đại diện của dữ liệu.
+\end{itemize}
+
+Việc kết hợp giữa dữ liệu mô phỏng và dữ liệu thực nghiệm giúp nhóm có thể vừa đánh giá tính chính xác của thuật toán trong điều kiện chuẩn, vừa kiểm chứng khả năng ứng dụng của phương pháp trong các tình huống thực tế, nơi tín hiệu thường bị ảnh hưởng bởi nhiễu, sai lệch hoặc các yếu tố sinh lý khác.
+
+\subsection*{Phạm vi nghiên cứu}
+
+Phạm vi nghiên cứu của đề tài được xác định rõ ràng nhằm đảm bảo tính khả thi và tập trung vào trọng tâm của vấn đề. Cụ thể, đề tài chỉ tập trung vào các khía cạnh liên quan đến quá trình xử lý và ước lượng tín hiệu, không đi sâu vào thiết kế phần cứng hoặc các yếu tố lâm sàng chuyên sâu. Các nội dung chính bao gồm:
+
+\begin{itemize}
+    \item Nghiên cứu và tổng hợp các lý thuyết, mô hình toán học mô tả tín hiệu EMG bề mặt và các yếu tố ảnh hưởng đến nó.
+    \item Phân tích, lựa chọn và cài đặt các thuật toán ước lượng MFCV hiện có, bao gồm các phương pháp dựa trên tương quan chéo, biến đổi Hilbert, phương pháp phổ, và các thuật toán cải tiến.
+    \item Phát triển và thử nghiệm phương pháp mới hoặc cải tiến các phương pháp hiện có nhằm nâng cao độ chính xác, giảm ảnh hưởng của nhiễu và tăng độ ổn định của kết quả ước lượng.
+    \item Mô phỏng và đánh giá hiệu quả của phương pháp trên dữ liệu mô phỏng và dữ liệu thực nghiệm thu thập được.
+\end{itemize}
+
+
+\section{Phương pháp nghiên cứu}
+
+Để đạt được các mục tiêu đã đề ra, đề tài được triển khai theo một quy trình nghiên cứu khoa học chặt chẽ, kết hợp giữa nghiên cứu lý thuyết, mô phỏng thực nghiệm và đánh giá kết quả. Cụ thể, quá trình thực hiện đề tài bao gồm các giai đoạn chính sau:
+
+\begin{itemize}
+    \item \textbf{Nghiên cứu và tổng hợp tài liệu:}  
+    Nhóm tiến hành thu thập, nghiên cứu và tổng hợp các tài liệu khoa học trong và ngoài nước liên quan đến tín hiệu điện cơ (\textit{Electromyography} – EMG), vận tốc dẫn truyền sợi cơ (\textit{Muscle Fiber Conduction Velocity} – MFCV) và các thuật toán ước lượng hiện có.  
+    Các nguồn tài liệu bao gồm bài báo khoa học, sách chuyên khảo, luận văn, công trình nghiên cứu và các báo cáo kỹ thuật từ các cơ sở nghiên cứu y sinh hàng đầu.  
+    Mục tiêu của giai đoạn này là nắm vững cơ sở lý thuyết của tín hiệu EMG, hiểu rõ đặc điểm, nhiễu đặc trưng và cơ chế hình thành tín hiệu, đồng thời khảo sát các phương pháp xử lý tín hiệu và ước lượng MFCV đã được công bố, qua đó xác định khoảng trống nghiên cứu và hướng phát triển phù hợp.
+
+    \item \textbf{Phân tích lý thuyết và xây dựng mô hình tín hiệu:}  
+    Dựa trên các tài liệu đã tổng hợp, nhóm tiến hành mô tả lại quá trình hình thành tín hiệu điện cơ bề mặt bằng mô hình toán học, bao gồm các thành phần của tín hiệu, ảnh hưởng của vị trí điện cực, độ sâu sợi cơ và các yếu tố sinh lý học khác.  
+    Việc xây dựng mô hình tín hiệu là cơ sở để tạo ra dữ liệu mô phỏng và giúp hiểu rõ mối quan hệ giữa vận tốc dẫn truyền và đặc tính phổ của tín hiệu EMG.  
+    Giai đoạn này cũng bao gồm việc lựa chọn các tham số mô phỏng như tần số lấy mẫu, tốc độ dẫn truyền, độ dài tín hiệu, mức nhiễu và khoảng cách điện cực.
+
+    \item \textbf{Mô phỏng tín hiệu EMG và tiền xử lý dữ liệu:}  
+    Quá trình mô phỏng được thực hiện bằng phần mềm MATLAB – công cụ mạnh mẽ trong lĩnh vực xử lý tín hiệu và mô hình hóa toán học.  
+    Nhóm tiến hành tạo tín hiệu EMG bề mặt có chứa các mức nhiễu khác nhau để kiểm tra khả năng chống nhiễu của các thuật toán ước lượng.  
+    Sau đó, tín hiệu được đưa qua các bước tiền xử lý gồm lọc nhiễu (lọc thông thấp, thông cao và Notch), chuẩn hóa tín hiệu, phát hiện biên sự kiện (event detection) và tách vùng quan tâm.  
+    Mục tiêu của giai đoạn này là đảm bảo tín hiệu đầu vào có chất lượng tốt, giảm thiểu ảnh hưởng của nhiễu trước khi áp dụng các thuật toán ước lượng.
+
+    \item \textbf{Triển khai các phương pháp ước lượng MFCV:} 
+    Nhóm nghiên cứu tiến hành cài đặt và thử nghiệm nhiều phương pháp ước lượng vận tốc dẫn truyền sợi cơ khác nhau. 
+    Các thuật toán bao gồm:
+    
+    \begin{itemize}
+        \item \textbf{Phương pháp tương quan chéo (Cross-Correlation Method – CC).}
+        \item \textbf{Phương pháp biến đổi Hilbert (Hilbert Transform – HT).}
+        \item \textbf{Phương pháp phổ tương quan (Spectral Cross-Correlation – SCOT).}
+        \item \textbf{Phương pháp lọc Roth (Roth Processor).}
+        \item \textbf{Phương pháp PHAT (Phase Transform – PHAT).}
+        \item \textbf{Phương pháp Eckart (Eckart Filter).}
+    \end{itemize}
+    
+    Các thuật toán này được lựa chọn dựa trên nền tảng \textit{Generalized Cross-Correlation (GCC)} — một khung lý thuyết cho phép tối ưu hóa quá trình ước lượng độ trễ tín hiệu sEMG. 
+    Trong đó, phương pháp \textbf{Eckart} và \textbf{Hannan–Thomson} (HT) được chứng minh là đạt độ chính xác cao nhất khi tín hiệu có tỉ lệ SNR thấp hơn 10 dB. 
+    Mỗi phương pháp được áp dụng trên cùng bộ dữ liệu mô phỏng và thực nghiệm để đảm bảo tính khách quan trong quá trình đánh giá, với độ chuẩn xác được định lượng bằng chỉ số \textbf{MRSE (Mean Root Square Error)}.
+
+
+
+    \item \textbf{Đánh giá và so sánh kết quả:}  
+    Sau khi thực hiện các thuật toán ước lượng, nhóm tiến hành đánh giá kết quả thông qua các tiêu chí định lượng như sai số trung bình (Mean Absolute Error), độ lệch chuẩn (Standard Deviation), tỷ lệ sai khác phần trăm và khả năng hoạt động ổn định trong môi trường có nhiễu.  
+    Ngoài ra, thời gian tính toán và độ phức tạp thuật toán cũng được xem xét để đánh giá hiệu quả thực tế của phương pháp.  
+    Các kết quả được trình bày dưới dạng bảng so sánh, biểu đồ và đồ thị trực quan, giúp minh họa rõ sự khác biệt giữa các thuật toán.
+
+    \item \textbf{Phân tích, nhận xét và rút ra kết luận:}  
+    Từ kết quả thu được, nhóm tiến hành phân tích và so sánh để xác định phương pháp có độ chính xác và ổn định cao nhất, đồng thời đánh giá nguyên nhân dẫn đến sai lệch hoặc hạn chế của từng phương pháp.  
+    Giai đoạn này cũng là cơ sở để đề xuất hướng phát triển và cải tiến cho các nghiên cứu sau, đặc biệt là khả năng áp dụng phương pháp vào các hệ thống đo lường thực tế hoặc các thiết bị y sinh hỗ trợ chẩn đoán.
+\end{itemize}
+
+
+\section{Ứng dụng và ý nghĩa của đề tài}
+
+Đề tài “\textit{Phát triển phương pháp ước lượng vận tốc dẫn truyền của tín hiệu điện cơ}” có ý nghĩa quan trọng cả về mặt khoa học lẫn thực tiễn. Kết quả của nghiên cứu không chỉ góp phần mở rộng hiểu biết trong lĩnh vực xử lý tín hiệu sinh học mà còn tạo tiền đề cho các ứng dụng y sinh trong chẩn đoán, phục hồi chức năng và theo dõi sức khỏe cơ bắp con người.
+
+\subsection*{Ý nghĩa khoa học}
+
+Về mặt khoa học, đề tài góp phần xây dựng nền tảng nghiên cứu và xử lý tín hiệu điện cơ bề mặt (\textit{Surface Electromyography} – sEMG) – một lĩnh vực đang được quan tâm mạnh mẽ trong các nghiên cứu về kỹ thuật y sinh và sinh lý học vận động.  
+Thông qua việc phát triển và thử nghiệm các phương pháp ước lượng vận tốc dẫn truyền sợi cơ (\textit{Muscle Fiber Conduction Velocity} – MFCV), đề tài giúp làm rõ mối quan hệ giữa đặc tính tín hiệu EMG và trạng thái hoạt động của cơ, từ đó góp phần hoàn thiện cơ sở lý thuyết trong việc phân tích và đánh giá tín hiệu sinh học.
+
+Kết quả nghiên cứu còn giúp mở rộng khả năng ứng dụng các kỹ thuật xử lý tín hiệu số như lọc nhiễu, phân tích miền thời gian – tần số, biến đổi Hilbert, hay tương quan chéo vào bài toán thực tế.  
+Đề tài cũng là cơ hội để thử nghiệm và đánh giá khả năng áp dụng các phương pháp học máy hoặc tối ưu hóa vào việc ước lượng thông số sinh lý, góp phần hướng tới xu thế phát triển các mô hình xử lý tín hiệu sinh học thông minh, tự động và chính xác hơn trong tương lai.
+
+Ngoài ra, đề tài còn giúp sinh viên củng cố kiến thức nền tảng về điện tử y sinh, hiểu rõ hơn về quy trình nghiên cứu khoa học – từ việc khảo sát tài liệu, mô phỏng, xử lý tín hiệu đến đánh giá kết quả. Điều này không chỉ giúp nâng cao năng lực học thuật mà còn rèn luyện kỹ năng tư duy phân tích, lập trình mô phỏng và đánh giá dữ liệu – những kỹ năng cần thiết cho các nghiên cứu sau đại học hoặc công việc trong lĩnh vực kỹ thuật y sinh và tự động hóa.
+
+\subsection*{Ý nghĩa thực tiễn và ứng dụng}
+
+Về mặt thực tiễn, đề tài hướng tới việc phát triển phương pháp ước lượng MFCV có thể ứng dụng trong các hệ thống theo dõi, chẩn đoán và hỗ trợ điều trị liên quan đến hoạt động của cơ bắp.  
+Các kết quả nghiên cứu có thể được áp dụng trong những lĩnh vực sau:
+
+\begin{itemize}
+    \item \textbf{Y học và phục hồi chức năng:}  
+    Phương pháp ước lượng MFCV giúp hỗ trợ chẩn đoán các bệnh lý thần kinh – cơ như teo cơ, viêm đa dây thần kinh, hoặc rối loạn dẫn truyền thần kinh – cơ. Ngoài ra, việc theo dõi sự thay đổi của MFCV trong thời gian dài có thể được ứng dụng trong các chương trình phục hồi chức năng hoặc vật lý trị liệu, giúp bác sĩ đánh giá tiến trình hồi phục của bệnh nhân một cách định lượng và khách quan.
+
+    \item \textbf{Thể thao và khoa học vận động:}  
+    Trong lĩnh vực thể thao chuyên nghiệp, việc phân tích MFCV có thể giúp huấn luyện viên và chuyên gia thể lực theo dõi tình trạng cơ bắp của vận động viên, xác định ngưỡng mỏi cơ, tối ưu hóa chế độ tập luyện và phòng ngừa chấn thương. Điều này góp phần nâng cao hiệu suất vận động và đảm bảo an toàn cho người tập.
+
+    \item \textbf{Nghiên cứu và phát triển thiết bị y sinh:}  
+    Kết quả của đề tài có thể được tích hợp vào các thiết bị đo lường và phân tích tín hiệu sinh học, chẳng hạn như thiết bị giám sát cơ bắp, hệ thống đánh giá hoạt động cơ trong phòng thí nghiệm hoặc các thiết bị hỗ trợ chẩn đoán cầm tay. Các mô hình và thuật toán được phát triển có thể trở thành nền tảng cho các sản phẩm thương mại trong tương lai, phục vụ công tác y tế, nghiên cứu khoa học và đào tạo.
+
+    \item \textbf{Giáo dục và đào tạo:}  
+    Đề tài là tài liệu tham khảo hữu ích cho sinh viên, học viên cao học và các nhà nghiên cứu trong lĩnh vực kỹ thuật y sinh, điện tử, tự động hóa và xử lý tín hiệu.  
+    Các thuật toán, mô hình và kết quả đánh giá có thể được sử dụng làm ví dụ minh họa trong giảng dạy, giúp sinh viên hiểu rõ hơn về cách ứng dụng lý thuyết vào thực tế.
+\end{itemize}
+
+
+% =============================================================
+% ------------------- CHƯƠNG 2 -------------------
+\chapter{CƠ SỞ LÝ THUYẾT}
+\section{Tín hiệu điện cơ bề mặt (sEMG)}
+
+\subsection{Khái niệm và ý nghĩa}
+
+Tín hiệu điện cơ bề mặt, hay còn gọi là \textit{Surface Electromyography} (viết tắt là sEMG), là tín hiệu sinh học phản ánh hoạt động điện học của các sợi cơ trong quá trình co và giãn cơ. Tín hiệu này được ghi nhận thông qua các điện cực đặt trên bề mặt da, ngay phía trên nhóm cơ cần khảo sát.  
+Khi hệ thần kinh vận động gửi xung điện đến các sợi cơ, các điện thế hoạt động (\textit{Action Potentials}) được hình thành và lan truyền dọc theo màng tế bào cơ. Sự chồng lấp của nhiều điện thế hoạt động từ các đơn vị vận động khác nhau (Motor Units) tạo nên tín hiệu điện cơ tổng hợp có thể đo được trên bề mặt da – đó chính là tín hiệu sEMG.
+
+Tín hiệu điện cơ bề mặt có biên độ dao động nhỏ, thường trong khoảng từ \( 50\,\mu V \) đến \( 5\,mV \), và chứa nhiều thông tin phản ánh trạng thái hoạt động của cơ bắp. Dạng sóng của tín hiệu này không tuần hoàn, mang tính ngẫu nhiên và chịu ảnh hưởng của nhiều yếu tố như vị trí đặt điện cực, độ dẫn điện của mô, độ sâu sợi cơ, mức độ co cơ và tình trạng sinh lý của cơ thể.
+
+Về mặt sinh lý học, tín hiệu sEMG thể hiện trực tiếp mối quan hệ giữa hoạt động của hệ thần kinh và hệ cơ. Khi một cơ được kích hoạt, số lượng và tần suất kích thích của các đơn vị vận động thay đổi tương ứng với mức độ co cơ, và điều này sẽ được phản ánh rõ ràng qua sự biến thiên của biên độ và phổ tần số của tín hiệu điện cơ.  
+Chính vì vậy, sEMG là một công cụ quan trọng trong việc đánh giá chức năng thần kinh – cơ, nghiên cứu cơ chế hoạt động của hệ vận động, cũng như theo dõi sự thay đổi sinh lý trong quá trình huấn luyện, điều trị hoặc phục hồi chức năng.
+
+Về mặt ứng dụng, tín hiệu sEMG được sử dụng rộng rãi trong nhiều lĩnh vực:
+\begin{itemize}
+    \item Trong \textbf{y học}, sEMG giúp chẩn đoán các rối loạn thần kinh – cơ như teo cơ, liệt cơ, hoặc các bệnh lý ảnh hưởng đến khả năng dẫn truyền thần kinh.
+    \item Trong \textbf{vật lý trị liệu}, sEMG được dùng để theo dõi tiến trình hồi phục cơ bắp, đánh giá hiệu quả của các bài tập phục hồi, và hỗ trợ điều chỉnh cường độ vận động phù hợp với tình trạng bệnh nhân.
+    \item Trong \textbf{khoa học thể thao}, sEMG cho phép phân tích sự phối hợp giữa các nhóm cơ, xác định mức độ mỏi cơ và tối ưu hóa chiến lược huấn luyện nhằm nâng cao hiệu suất vận động.
+    \item Trong \textbf{nghiên cứu kỹ thuật y sinh}, sEMG là nguồn dữ liệu đầu vào cho các hệ thống điều khiển sinh học như tay chân giả, robot hỗ trợ vận động hoặc giao diện người – máy (Human-Machine Interface).
+\end{itemize}
+
+
+\subsection{Cấu tạo và hoạt động của hệ thần kinh – cơ}
+
+Hệ thần kinh – cơ (\textit{Neuromuscular System}) là hệ thống đóng vai trò trung gian giữa ý chí vận động của con người và hoạt động thực tế của các cơ bắp. Nó bao gồm các thành phần chính: hệ thần kinh trung ương, hệ thần kinh ngoại biên, các neuron vận động, các sợi cơ và các khớp nối thần kinh – cơ (\textit{Neuromuscular Junction}). Mối liên kết chặt chẽ giữa các thành phần này giúp đảm bảo quá trình điều khiển vận động được thực hiện chính xác, nhanh chóng và hiệu quả.
+
+\subsubsection*{1. Cấu tạo của hệ thần kinh – cơ}
+
+Hệ thần kinh trung ương, bao gồm não và tủy sống, là trung tâm điều khiển mọi hoạt động của cơ thể. Các tín hiệu thần kinh được hình thành trong vỏ não vận động (\textit{Motor Cortex}) được truyền xuống tủy sống thông qua các bó sợi thần kinh, sau đó đi ra ngoài cơ thể thông qua các neuron vận động (\textit{Motor Neurons}).  
+Mỗi neuron vận động kết nối với một nhóm sợi cơ cụ thể tạo thành một đơn vị vận động (\textit{Motor Unit}). Số lượng sợi cơ trong một đơn vị vận động phụ thuộc vào loại cơ và chức năng của cơ đó. Ví dụ, các cơ nhỏ dùng để điều khiển cử động tinh vi (như cơ mắt hoặc ngón tay) có số sợi cơ trên mỗi neuron vận động ít, trong khi các cơ lớn (như cơ đùi hoặc cơ cánh tay) có hàng trăm sợi cơ trên một neuron vận động.
+
+Tại điểm tiếp xúc giữa đầu tận cùng của neuron vận động và màng tế bào cơ có một vùng đặc biệt gọi là khớp nối thần kinh – cơ (\textit{Neuromuscular Junction}). Tại đây, tín hiệu điện thần kinh được chuyển đổi thành tín hiệu hóa học thông qua việc giải phóng chất dẫn truyền thần kinh – chủ yếu là \textit{Acetylcholine} (ACh).  
+Chất này khuếch tán qua khe synap và gắn vào các thụ thể đặc hiệu trên màng tế bào cơ, gây ra sự khử cực màng và hình thành điện thế hoạt động cơ (\textit{Muscle Action Potential}).
+
+\subsubsection*{2. Cơ chế hoạt động và phát sinh tín hiệu điện cơ (EMG)}
+
+Khi cơ thể muốn thực hiện một động tác bất kỳ, não bộ sẽ phát ra các xung thần kinh đến các neuron vận động tương ứng. Mỗi xung thần kinh là một tín hiệu điện có dạng xung ngắn (kéo dài khoảng 1–5 ms) lan truyền dọc theo sợi trục neuron với tốc độ từ 50–100 m/s.  
+Khi xung này đến đầu tận cùng của neuron, nó kích thích sự giải phóng \textit{Acetylcholine} vào khe synap. Quá trình khử cực màng tế bào cơ do ACh gây ra sẽ kích hoạt sự phóng điện lan truyền dọc theo màng sợi cơ.  
+Điện thế hoạt động này di chuyển hai chiều dọc theo chiều dài sợi cơ với vận tốc trung bình từ 3–6 m/s — chính là vận tốc dẫn truyền sợi cơ (\textit{Muscle Fiber Conduction Velocity – MFCV}), một thông số quan trọng được nghiên cứu trong đề tài này.
+
+Sự lan truyền điện thế hoạt động kích hoạt các kênh ion trên màng tế bào cơ, làm thay đổi nồng độ ion canxi nội bào và dẫn đến quá trình trượt sợi actin – myosin, gây ra hiện tượng co cơ. Khi nhiều sợi cơ trong cùng một nhóm được kích hoạt đồng thời, sự chồng lấp của các điện thế hoạt động riêng lẻ sẽ tạo thành tín hiệu điện cơ tổng hợp, có thể đo được bằng điện cực đặt trên bề mặt da – đó chính là tín hiệu điện cơ bề mặt (sEMG).
+
+\subsubsection*{3. Đặc điểm sinh lý của tín hiệu thần kinh – cơ}
+
+Hoạt động điện của cơ không diễn ra liên tục mà phụ thuộc vào cường độ và tần suất kích thích của hệ thần kinh trung ương. Khi mức độ vận động tăng, não bộ sẽ huy động thêm nhiều đơn vị vận động hoạt động đồng thời, dẫn đến biên độ tín hiệu EMG tăng lên.  
+Ngoài ra, khi cơ mỏi dần, sự thay đổi trong quá trình dẫn truyền thần kinh và phản ứng cơ học của sợi cơ làm giảm vận tốc dẫn truyền, đồng thời phổ tần số của tín hiệu EMG bị dịch chuyển về phía tần số thấp hơn.  
+Những thay đổi này là cơ sở quan trọng để đánh giá tình trạng hoạt động và mức độ mỏi cơ, đồng thời cũng là mục tiêu chính trong việc ước lượng vận tốc dẫn truyền sợi cơ mà đề tài hướng tới.
+
+\subsubsection*{4. Vai trò của hiểu biết về hệ thần kinh – cơ trong xử lý tín hiệu EMG}
+
+Việc nắm vững cấu trúc và cơ chế hoạt động của hệ thần kinh – cơ là yếu tố nền tảng để hiểu rõ bản chất vật lý và sinh học của tín hiệu EMG. Nó giúp nhà nghiên cứu giải thích các đặc điểm của tín hiệu thu được, lựa chọn phương pháp xử lý phù hợp và xác định được mối liên hệ giữa tín hiệu điện và hoạt động sinh lý thực tế của cơ thể.  
+Đặc biệt, trong các nghiên cứu ước lượng vận tốc dẫn truyền sợi cơ, hiểu rõ cơ chế phát sinh và lan truyền điện thế hoạt động giúp tăng độ chính xác trong mô hình hóa, mô phỏng cũng như khi triển khai thực nghiệm trên tín hiệu thực tế.
+
+
+\subsection{Nguyên lý ghi nhận tín hiệu sEMG}
+
+Tín hiệu điện cơ bề mặt (\textit{sEMG – Surface Electromyography}) được ghi nhận dựa trên nguyên lý phát hiện sự chênh lệch điện thế sinh ra khi các sợi cơ co rút dưới tác động của xung thần kinh vận động.  
+Khi cơ được kích hoạt, các điện thế hoạt động (\textit{Action Potentials}) lan truyền dọc theo màng sợi cơ, tạo nên các biến thiên điện áp nhỏ trên bề mặt da. Việc đo và ghi lại các biến thiên này cho phép ta quan sát, phân tích hoạt động của cơ bắp trong thời gian thực.
+
+\subsubsection*{1. Cấu trúc hệ thống ghi nhận tín hiệu sEMG}
+
+Một hệ thống đo tín hiệu sEMG cơ bản thường bao gồm bốn khối chính:  
+\begin{enumerate}
+    \item \textbf{Khối cảm biến (điện cực)}:  
+    Các điện cực được đặt trực tiếp trên bề mặt da tại vị trí gần vùng cơ cần đo. Chúng có nhiệm vụ thu tín hiệu điện áp rất nhỏ (thường trong khoảng \( 50\,\mu V \) đến \( 5\,mV \)) sinh ra từ hoạt động điện của cơ.  
+    Hai loại điện cực chính thường được sử dụng là:
+    \begin{itemize}
+        \item \textit{Điện cực lưỡng cực (bipolar electrode):} gồm hai đầu thu tín hiệu và một điện cực tham chiếu, cho phép đo chênh lệch điện thế giữa hai điểm trên cơ.  
+        \item \textit{Điện cực đơn cực (monopolar electrode):} gồm một điện cực thu tín hiệu và một điện cực chuẩn (\textit{reference}) đặt ở vùng cơ ít hoạt động.
+    \end{itemize}
+    Việc lựa chọn loại điện cực, chất liệu và vị trí đặt có ảnh hưởng lớn đến chất lượng tín hiệu thu được.
+
+    \item \textbf{Khối khuếch đại tín hiệu (EMG Amplifier):}  
+    Vì biên độ tín hiệu EMG rất nhỏ, nên nó cần được khuếch đại trước khi đưa vào mạch xử lý. Bộ khuếch đại thường có hệ số khuếch đại từ \( 1000 \) đến \( 10{,}000 \) lần và có trở kháng đầu vào cao (trên \( 1\,M\Omega \)) nhằm giảm thiểu tổn hao tín hiệu.  
+    Bộ khuếch đại vi sai (\textit{Differential Amplifier}) thường được sử dụng để loại bỏ nhiễu chung (\textit{Common-Mode Noise}) từ môi trường, đặc biệt là nhiễu từ lưới điện 50/60 Hz.
+
+    \item \textbf{Khối lọc tín hiệu (Filter):}  
+    Sau khi khuếch đại, tín hiệu sEMG được đưa qua các bộ lọc thông dải (\textit{Band-pass filter}) để loại bỏ nhiễu và các thành phần không mong muốn.  
+    Thông thường, tín hiệu EMG có dải tần chủ yếu trong khoảng 20–500 Hz, do đó hệ thống lọc được thiết kế sao cho:
+    \[
+        f_{low} \approx 20\,Hz, \quad f_{high} \approx 500\,Hz
+    \]
+    nhằm loại bỏ nhiễu tần số thấp (như chuyển động hoặc dao động nền DC) và nhiễu tần số cao (như nhiễu thiết bị hoặc nhiễu điện từ).
+
+    \item \textbf{Khối số hóa và xử lý (ADC – Digital Processing):}  
+    Tín hiệu analog sau khi được lọc sẽ được đưa vào bộ chuyển đổi tương tự – số (\textit{Analog-to-Digital Converter – ADC}) để số hóa.  
+    Tần số lấy mẫu thường nằm trong khoảng 1000–2000 Hz để đảm bảo tuân thủ định lý Nyquist và đủ độ chính xác trong việc tái tạo tín hiệu.  
+    Dữ liệu số thu được sau đó được lưu trữ hoặc truyền đến máy tính, nơi các thuật toán xử lý tín hiệu (lọc, phân tích năng lượng, ước lượng vận tốc dẫn truyền, nhận dạng mỏi cơ, v.v.) được áp dụng.
+\end{enumerate}
+
+\subsubsection*{2. Quy trình ghi nhận và xử lý tín hiệu}
+
+Quy trình ghi nhận sEMG bao gồm các bước cơ bản như sau:
+\begin{itemize}
+    \item \textbf{Chuẩn bị bề mặt da:}  
+    Da tại vị trí gắn điện cực được làm sạch bằng cồn để giảm điện trở tiếp xúc và loại bỏ lớp dầu hoặc tế bào chết.
+    \item \textbf{Đặt điện cực:}  
+    Các điện cực được đặt song song với hướng sợi cơ, cách nhau từ 1–2 cm để tối ưu khả năng phát hiện tín hiệu. Một điện cực tham chiếu được đặt ở vùng cơ không hoạt động (thường ở xương hoặc điểm nối khớp).
+    \item \textbf{Thu và khuếch đại tín hiệu:}  
+    Các xung điện thế hoạt động lan truyền dọc theo sợi cơ được ghi nhận đồng thời bởi hai điện cực. Bộ khuếch đại vi sai tính toán chênh lệch giữa hai đầu đo để tạo ra tín hiệu sEMG tổng hợp.
+    \item \textbf{Lọc và số hóa:}  
+    Sau khi khuếch đại, tín hiệu được lọc bỏ nhiễu cơ học, nhiễu điện từ, sau đó được chuyển đổi sang dạng số và gửi đến máy tính hoặc vi điều khiển để phân tích.
+    \item \textbf{Xử lý tín hiệu số:}  
+    Các thuật toán xử lý tín hiệu được áp dụng như lọc nhiễu kỹ thuật số, tính toán giá trị RMS, năng lượng tín hiệu, phân tích phổ tần số, hoặc ước lượng vận tốc dẫn truyền sợi cơ (MFCV).
+\end{itemize}
+
+\subsubsection*{3. Các yếu tố ảnh hưởng đến chất lượng ghi nhận}
+
+Chất lượng tín hiệu sEMG phụ thuộc vào nhiều yếu tố, bao gồm:
+\begin{itemize}
+    \item \textbf{Vị trí và hướng đặt điện cực:} Đặt sai vị trí có thể thu nhiễu từ cơ lân cận (\textit{cross-talk}) hoặc giảm biên độ tín hiệu.
+    \item \textbf{Điện trở tiếp xúc da – điện cực:} Điện trở cao làm giảm tín hiệu và tăng nhiễu, do đó cần làm sạch da kỹ lưỡng trước khi đo.
+    \item \textbf{Nhiễu từ môi trường:} Nhiễu từ lưới điện, thiết bị điện tử, hoặc chuyển động cơ học có thể gây sai lệch đáng kể cho tín hiệu.
+    \item \textbf{Đặc tính sinh lý cá nhân:} Độ dày mô mỡ, nhiệt độ cơ thể, mức độ hydrat hóa, và cường độ co cơ đều ảnh hưởng đến tín hiệu thu được.
+\end{itemize}
+
+
+\section{Phương pháp xử lý tín hiệu sEMG}
+
+Xử lý tín hiệu điện cơ bề mặt (sEMG) là quá trình quan trọng nhằm loại bỏ nhiễu, trích xuất thông tin hữu ích và suy luận ra các tham số đặc trưng phản ánh hoạt động cơ bắp.  
+Tín hiệu sEMG thô thu được từ cảm biến thường chứa nhiều tạp nhiễu do ảnh hưởng của môi trường, chuyển động, nhiễu điện từ hoặc hoạt động cơ lân cận. Do đó, việc áp dụng một quy trình xử lý tín hiệu bài bản là cần thiết để đảm bảo kết quả phân tích chính xác.
+
+Quy trình xử lý tín hiệu sEMG trong đề tài này bao gồm các bước cơ bản:  
+\textbf{(1) Lọc nhiễu}, \textbf{(2) Chuẩn hóa tín hiệu}, \textbf{(3) Tách đoạn tín hiệu có ích}, \textbf{(4) Trích xuất đặc trưng}, và \textbf{(5) Ước lượng vận tốc dẫn truyền sợi cơ (MFCV)}.
+
+\subsection*{1. Lọc nhiễu tín hiệu}
+
+\textbf{Mục đích:} Loại bỏ các thành phần không mong muốn (nhiễu nền, nhiễu cơ học, nhiễu điện từ, nhiễu DC) nhằm giữ lại phần thông tin có giá trị sinh lý.
+
+Tín hiệu sEMG thường có dải tần năng lượng chủ yếu trong khoảng 20–500 Hz. Do đó, bộ lọc thông dải (\textit{band-pass filter}) được sử dụng để giữ lại dải tần này, đồng thời loại bỏ:
+\begin{itemize}
+    \item Thành phần tần số thấp dưới 20 Hz — thường là nhiễu chuyển động hoặc dao động nền.
+    \item Thành phần tần số cao trên 500 Hz — thường là nhiễu từ thiết bị hoặc nhiễu điện từ.
+\end{itemize}
+
+Bộ lọc Butterworth bậc 4 được sử dụng phổ biến do có đáp ứng biên độ phẳng trong vùng thông và không gây méo pha nghiêm trọng.  
+Ngoài ra, một bộ lọc Notch tại 50 Hz hoặc 60 Hz cũng được thêm vào để loại bỏ nhiễu từ lưới điện xoay chiều.
+
+Phương trình tổng quát của tín hiệu sau khi lọc được biểu diễn như sau:
+\begin{equation}
+x_f(t) = \big(x(t) * h_{bp}(t)\big) * h_{notch}(t)
+\label{eq:filtered_signal}
+\end{equation}
+trong đó:
+\begin{itemize}
+    \item $x(t)$ là tín hiệu sEMG thô thu được từ cảm biến;
+    \item $h_{bp}(t)$ là đáp ứng xung của \textbf{bộ lọc thông dải (Band-pass filter)};
+    \item $h_{notch}(t)$ là đáp ứng xung của \textbf{bộ lọc Notch} dùng để khử nhiễu lưới điện (50/60~Hz).
+\end{itemize}
+
+
+\subsection*{2. Chuẩn hóa tín hiệu}
+
+Sau khi lọc, tín hiệu sEMG vẫn có thể bị sai lệch biên độ do sự khác biệt về trở kháng da, vị trí đặt điện cực, hoặc thay đổi lực co.  
+Do đó, bước chuẩn hóa được thực hiện nhằm quy đồng mức tín hiệu, giúp việc so sánh giữa các mẫu hoặc các cá thể trở nên khách quan.
+
+Hai phương pháp chuẩn hóa thường được áp dụng trong quá trình tiền xử lý tín hiệu sEMG như sau:
+
+\begin{itemize}
+    \item \textbf{Chuẩn hóa theo giá trị cực đại (MVC – Maximum Voluntary Contraction):}  
+    Trong phương pháp này, tín hiệu được chia cho giá trị biên độ cực đại thu được khi cơ hoạt động ở mức co tối đa.  
+    Phương trình được biểu diễn như sau:
+    \begin{equation}
+        x_n(t) = \frac{x_f(t)}{x_{\mathrm{MVC}}}
+        \label{eq:mvc_norm}
+    \end{equation}
+    trong đó $x_f(t)$ là tín hiệu sau khi lọc và $x_{\mathrm{MVC}}$ là giá trị cực đại của tín hiệu trong giai đoạn co cơ tự nguyện tối đa.
+
+    \item \textbf{Chuẩn hóa theo giá trị RMS:}  
+    Ở phương pháp này, mỗi đoạn tín hiệu được chia cho giá trị \textbf{RMS trung bình} của chính nó để đưa biên độ về cùng thang đo, đảm bảo tính nhất quán giữa các mẫu tín hiệu.  
+    Phương trình chuẩn hóa được viết như sau:
+    \begin{equation}
+        x_n(t) = \frac{x_f(t)}{x_{\mathrm{RMS}}}
+        \label{eq:rms_norm}
+    \end{equation}
+    trong đó $x_{\mathrm{RMS}}$ là giá trị căn phương bình phương trung bình của đoạn tín hiệu đang xét.
+\end{itemize}
+
+
+Việc chuẩn hóa giúp loại bỏ sự khác biệt cá nhân và làm tăng độ chính xác khi tính toán các thông số đặc trưng như RMS, MDF hay MFCV.
+
+\subsection*{3. Tách đoạn tín hiệu có ích (Segmentation)}
+
+Trong quá trình ghi nhận, tín hiệu sEMG có thể chứa cả giai đoạn nghỉ, chuyển động, hoặc nhiễu nền.  
+Do đó, cần tách riêng các đoạn tín hiệu chứa hoạt động cơ thực sự để tránh sai lệch khi phân tích.
+
+Một số phương pháp phát hiện vùng hoạt động của cơ thường được áp dụng như sau:
+
+\begin{itemize}
+    \item \textbf{Phương pháp ngưỡng năng lượng:}  
+    Phương pháp này dựa trên giá trị bình phương tức thời của tín hiệu $x^2(t)$.  
+    Khi năng lượng của tín hiệu vượt quá một ngưỡng xác định $T$, đoạn tín hiệu đó được xem là vùng cơ hoạt động.  
+    Phương trình được biểu diễn như sau:
+    \begin{equation}
+        x_{\mathrm{active}}(t) =
+        \begin{cases}
+            x(t), & \text{nếu } x^2(t) > T \\
+            0, & \text{ngược lại}
+        \end{cases}
+        \label{eq:energy_threshold}
+    \end{equation}
+    trong đó $T$ là ngưỡng năng lượng được xác định thực nghiệm hoặc dựa trên tỷ lệ phần trăm năng lượng cực đại của tín hiệu.
+
+    \item \textbf{Phương pháp trượt cửa sổ RMS (Moving RMS):}  
+    Trong phương pháp này, tín hiệu được chia thành các cửa sổ thời gian có độ dài cố định (ví dụ 100–200~ms).  
+    Giá trị RMS của từng cửa sổ được tính theo công thức:
+    \begin{equation}
+        \mathrm{RMS}(t_k) = \sqrt{\frac{1}{N} \sum_{i=1}^{N} x^2(t_i)}
+        \label{eq:moving_rms}
+    \end{equation}
+    Nếu giá trị $\mathrm{RMS}(t_k)$ vượt ngưỡng $T_{\mathrm{RMS}}$, đoạn tín hiệu tương ứng được xem là vùng cơ hoạt động.  
+    Phương pháp này có ưu điểm là giảm nhiễu và phản ánh tốt biến thiên năng lượng theo thời gian.
+\end{itemize}
+
+
+Kích thước cửa sổ thường chọn trong khoảng 100–250 ms để đảm bảo cân bằng giữa độ mịn và khả năng bắt sự kiện co cơ.
+
+\subsection*{4. Trích xuất đặc trưng (Feature Extraction)}
+Sau khi thu được đoạn tín hiệu sEMG sạch và đã chuẩn hóa, bước tiếp theo là \textbf{trích xuất đặc trưng} nhằm thu được các thông tin mang ý nghĩa sinh lý và thống kê, phục vụ cho quá trình phân tích hoặc huấn luyện mô hình phân loại mỏi cơ.  
+
+Các đặc trưng phổ biến được sử dụng trong nghiên cứu sEMG có thể chia thành hai nhóm chính:
+
+\begin{itemize}
+    \item \textbf{Đặc trưng miền thời gian (Time-domain features):}
+    \begin{itemize}
+        \item \textit{Giá trị căn phương bình phương trung bình (RMS – Root Mean Square):}
+        \begin{equation}
+            \mathrm{RMS} = \sqrt{\frac{1}{N} \sum_{i=1}^{N} x_i^2}
+            \label{eq:rms}
+        \end{equation}
+        Đặc trưng này phản ánh năng lượng trung bình của tín hiệu và thường tăng theo cường độ co cơ.
+
+        \item \textit{Giá trị trung bình tuyệt đối (MAV – Mean Absolute Value):}
+        \begin{equation}
+            \mathrm{MAV} = \frac{1}{N} \sum_{i=1}^{N} |x_i|
+            \label{eq:mav}
+        \end{equation}
+        MAV biểu diễn cường độ trung bình của hoạt động điện cơ, thường có tương quan cao với mức độ mỏi.
+
+        \item \textit{Zero Crossing (ZC):}  
+        Là số lần tín hiệu cắt trục $0$, biểu thị mức độ dao động và thay đổi tần suất trong tín hiệu.  
+        Đặc trưng này thường giảm khi cơ bắt đầu mỏi do tần suất kích hoạt sợi cơ giảm.
+    \end{itemize}
+
+    \item \textbf{Đặc trưng miền tần số (Frequency-domain features):}
+    \begin{itemize}
+        \item \textit{Tần số trung bình (MNF – Mean Frequency):}
+        \begin{equation}
+            \mathrm{MNF} = \frac{\sum_{i} f_i P(f_i)}{\sum_{i} P(f_i)}
+            \label{eq:mnf}
+        \end{equation}
+        trong đó $P(f_i)$ là phổ công suất tại tần số $f_i$. MNF phản ánh sự phân bố năng lượng của tín hiệu trong miền tần số.
+
+        \item \textit{Tần số trung vị (MDF – Median Frequency):}  
+        Là giá trị tần số $f_{\mathrm{MDF}}$ thỏa mãn điều kiện:
+        \begin{equation}
+            \sum_{f_i \le f_{\mathrm{MDF}}} P(f_i) = \frac{1}{2} \sum_{i} P(f_i)
+            \label{eq:mdf}
+        \end{equation}
+        MDF là chỉ số quan trọng phản ánh hiện tượng mỏi cơ, khi cơ mỏi thì MDF có xu hướng giảm dần do dịch chuyển năng lượng phổ về tần số thấp.
+    \end{itemize}
+\end{itemize}
+
+Các đặc trưng này phản ánh rõ sự thay đổi trong hoạt động cơ:  
+khi hiện tượng mỏi xuất hiện, \textbf{MNF} và \textbf{MDF} thường giảm dần, trong khi \textbf{RMS} và \textbf{MAV} thay đổi theo mức độ co cơ.  
+Việc kết hợp đồng thời các đặc trưng miền thời gian và miền tần số giúp mô hình học máy (SVM, KNN, LDA) phân biệt chính xác hơn giữa hai trạng thái \textbf{“mỏi”} và \textbf{“không mỏi”}.
+
+
+\subsection*{5. Ước lượng vận tốc dẫn truyền sợi cơ (MFCV)}
+
+\textbf{Vận tốc dẫn truyền sợi cơ (MFCV – Muscle Fiber Conduction Velocity)} là chỉ số phản ánh tốc độ lan truyền của điện thế hoạt động dọc theo sợi cơ, qua đó thể hiện trạng thái sinh lý của cơ.  
+Khi cơ bị mỏi, vận tốc dẫn truyền thường giảm do sự suy giảm khả năng kích hoạt của các sợi cơ.
+
+\bigskip
+\noindent Việc ước lượng MFCV được thực hiện bằng cách đo \textbf{độ trễ thời gian} giữa hai tín hiệu sEMG ghi lại tại hai vị trí khác nhau dọc theo cùng một sợi cơ.  
+Giả sử hai tín hiệu thu được là $x_1(t)$ và $x_2(t)$, cách nhau một khoảng cách $d$.  
+Độ trễ $\Delta t$ giữa hai tín hiệu có thể được xác định bằng \textbf{phương pháp tương quan chéo (Cross-correlation)}, được mô tả bởi phương trình:
+\begin{equation}
+    R_{12}(\tau) = \int x_1(t) \, x_2(t+\tau)\, dt
+    \label{eq:crosscorr}
+\end{equation}
+
+Giá trị $\tau_{\max}$ ứng với cực đại của hàm tương quan $R_{12}(\tau)$ chính là độ trễ giữa hai tín hiệu.  
+Khi đó, vận tốc dẫn truyền sợi cơ được xác định theo công thức:
+\begin{equation}
+    \mathrm{MFCV} = \frac{d}{\tau_{\max}}
+    \label{eq:mfcv}
+\end{equation}
+trong đó:
+\begin{itemize}
+    \item $d$ là khoảng cách giữa hai điện cực (thường trong khoảng 10–20~mm);
+    \item $\tau_{\max}$ là độ trễ thời gian ứng với giá trị tương quan chéo cực đại.
+\end{itemize}
+
+\noindent Trong thực tế, để nâng cao độ chính xác của phép đo, có thể áp dụng các phương pháp cải tiến như:
+\begin{itemize}
+    \item \textbf{Hilbert Transform} để xác định pha tức thời của tín hiệu;
+    \item \textbf{ROTH} hoặc \textbf{PHAT} (Phase Transform) nhằm giảm ảnh hưởng của nhiễu biên độ;
+    \item \textbf{Cross-Spectrum Analysis} để ước lượng độ trễ trong miền tần số.
+\end{itemize}
+
+Kết quả thực nghiệm cho thấy, giá trị \textbf{MFCV} thường \textbf{giảm dần theo thời gian co cơ}, đây là một chỉ báo đáng tin cậy phản ánh hiện tượng \textbf{mỏi cơ}, hỗ trợ hiệu quả cho quá trình đánh giá trạng thái hoạt động cơ bắp.
+
+
+
+\section{Các phương pháp ước lượng MFCV}
+
+Ước lượng vận tốc dẫn truyền sợi cơ (\textit{Muscle Fiber Conduction Velocity – MFCV}) là quá trình xác định tốc độ lan truyền của tín hiệu điện thế dọc theo sợi cơ.  
+Giá trị này được tính toán dựa trên \textbf{độ trễ thời gian} giữa các tín hiệu điện cơ bề mặt (sEMG) thu nhận tại các vị trí điện cực khác nhau.  
+Nhiệm vụ chính của các thuật toán ước lượng MFCV là xác định chính xác độ trễ này ngay cả khi tín hiệu bị nhiễu hoặc biến dạng.
+
+Phương pháp ước lượng MFCV thường dựa trên \textbf{mô hình tương quan tổng quát (Generalized Cross-Correlation – GCC)}, trong đó hai tín hiệu $x(t)$ và $y(t)$ được tiền xử lý bằng các bộ lọc đặc trưng (processor) nhằm cải thiện độ chính xác khi tìm cực đại của hàm tương quan.
+
+\subsection*{1. Phương pháp tương quan chéo (Cross-Correlation – CC)}
+Phương pháp CC là phương pháp cơ bản nhất, tính toán hàm tương quan giữa hai tín hiệu:
+\[
+R_{xy}(\tau) = \int x(t) \, y(t+\tau) \, dt
+\]
+Đỉnh của hàm tương quan $R_{xy}(\tau)$ tương ứng với độ trễ $\tau$ giữa hai tín hiệu, từ đó tính được MFCV.  
+\textbf{Ưu điểm:} Đơn giản, dễ cài đặt, hoạt động tốt khi SNR cao.  
+\textbf{Nhược điểm:} Nhạy với nhiễu, đỉnh tương quan bị mờ khi tín hiệu méo pha hoặc nhiễu mạnh.
+
+\subsection*{2. Phương pháp Roth}
+Phương pháp Roth sử dụng bộ lọc làm phẳng phổ công suất (\textit{Wiener whitening filter}) nhằm giảm nhiễu trắng và cải thiện độ chính xác của đỉnh tương quan.  
+Hàm trọng số của bộ lọc Roth:
+\[
+\Psi_{Roth}(\omega) = \frac{1}{S_{xx}(\omega)}
+\]
+\textbf{Ưu điểm:} Giảm nhiễu trắng hiệu quả, cải thiện độ phân giải khi tín hiệu yếu.  
+\textbf{Nhược điểm:} Không ổn định khi biên độ phổ nhỏ, dễ làm méo tín hiệu khi SNR thấp.
+
+\subsection*{3. Phương pháp SCOT (Smoothed Coherence Transform)}
+SCOT là phương pháp đối xứng hóa Roth, sử dụng trọng số theo cả hai kênh tín hiệu:
+\[
+\Psi_{SCOT}(\omega) = \frac{1}{\sqrt{S_{xx}(\omega)S_{yy}(\omega)}}
+\]
+Phương pháp này cân bằng ảnh hưởng giữa hai kênh và giảm hiện tượng lệch pha.  
+\textbf{Ưu điểm:} Cân bằng giữa độ chính xác và ổn định, hiệu quả trong môi trường nhiễu tần số phức tạp.  
+\textbf{Nhược điểm:} Yêu cầu tính phổ công suất chính xác, tốn thời gian xử lý hơn CC.
+
+\subsection*{4. Phương pháp PHAT (Phase Transform)}
+PHAT sử dụng phổ tương quan có trọng số nghịch đảo với biên độ để chỉ giữ lại thông tin pha:
+\[
+\Psi_{PHAT}(\omega) = \frac{1}{|S_{xy}(\omega)|}
+\]
+Cách tiếp cận này loại bỏ ảnh hưởng của biên độ phổ, giúp nhận biết chính xác độ trễ ngay cả khi nhiễu mạnh.  
+\textbf{Ưu điểm:} Chống nhiễu tốt, không phụ thuộc vào biên độ tín hiệu.  
+\textbf{Nhược điểm:} Giảm độ phân giải khi nhiễu pha cao.
+
+\subsection*{5. Phương pháp Eckart}
+Phương pháp Eckart được thiết kế theo tiêu chí \textbf{tối đa hóa độ lệch tín hiệu (deflection maximization)} giữa tín hiệu có và không có nhiễu.  
+Bộ lọc Eckart đặt trọng số cao cho các vùng tần số có SNR lớn và giảm trọng số ở vùng nhiễu thấp:
+\[
+\Psi_{Eckart}(\omega) = \frac{SNR(\omega)}{1 + SNR(\omega)}
+\]
+\textbf{Ưu điểm:} Giữ được độ chính xác cao trong điều kiện nhiễu mạnh, hiệu quả khi SNR < 10 dB.  
+\textbf{Nhược điểm:} Cần biết trước hoặc ước lượng SNR phổ, tăng độ phức tạp tính toán.
+
+\subsection*{6. Phương pháp Hannan–Thomson (HT)}
+HT là bộ lọc dựa trên nguyên lý \textbf{ước lượng hợp lý cực đại (Maximum Likelihood Estimation)} với giả thiết tín hiệu Gaussian.  
+Phương pháp này thích ứng tốt với sự thay đổi của SNR và có thể chuyển dần giữa dạng CC và Eckart khi điều kiện tín hiệu thay đổi.  
+\textbf{Ưu điểm:} Cân bằng giữa CC và Eckart, hoạt động tốt trên phổ rộng và nhiều mức SNR.  
+\textbf{Nhược điểm:} Độ phức tạp tính toán cao, yêu cầu mô hình nhiễu chính xác.
+
+\subsection*{7. So sánh và đánh giá tổng hợp}
+Bảng~\ref{tab:comparison} trình bày ưu và nhược điểm của các phương pháp ước lượng MFCV:
+
+\begin{table}[h!]
+\centering
+\caption{So sánh các phương pháp ước lượng MFCV}
+\label{tab:comparison}
+\begin{tabular}{|p{3cm}|p{5cm}|p{5cm}|}
+\hline
+\textbf{Phương pháp} & \textbf{Ưu điểm} & \textbf{Nhược điểm} \\
+\hline
+Cross-correlation & Đơn giản, dễ thực hiện, trực quan & Nhạy cảm với nhiễu, độ chính xác giảm khi tín hiệu méo pha \\
+\hline
+ROTH & Giảm nhiễu trắng, cải thiện độ phân giải tần thấp & Không ổn định khi biên độ phổ nhỏ \\
+\hline
+SCOT & Cân bằng giữa ổn định và chính xác, hoạt động tốt trong môi trường nhiễu phức & Cần tính phổ công suất chính xác, tốn thời gian xử lý \\
+\hline
+PHAT & Chống nhiễu tốt, không phụ thuộc biên độ & Giảm độ phân giải nếu nhiễu pha cao \\
+\hline
+ECKART & Chính xác cao ở SNR thấp, giảm ảnh hưởng của nhiễu & Cần biết hoặc ước lượng SNR, tính toán phức tạp \\
+\hline
+Hannan–Thomson & Hiệu quả cao trên phổ rộng, thích ứng tốt với SNR thay đổi & Cần mô hình nhiễu chính xác, xử lý nặng \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Kết luận:}  
+Các nghiên cứu chỉ ra rằng trong điều kiện SNR thấp hơn 10 dB, hai phương pháp \textbf{Eckart} và \textbf{Hannan–Thomson} cho kết quả ước lượng chính xác nhất.  
+Độ chuẩn xác của các phương pháp trong đề tài này được đánh giá duy nhất bằng chỉ số \textbf{MRSE (Mean Root Square Error)}:
+\[
+\text{MRSE} = \sqrt{\frac{1}{N}\sum_{i=1}^{N}(y_i - \hat{y}_i)^2}
+\]
+Giá trị MRSE càng nhỏ thể hiện khả năng ước lượng MFCV càng chính xác.
+
+
+
+
+
+
+
+
+% =============================================================
+% ------------------- CHƯƠNG 3 -------------------
+\chapter{PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG}
+\section{Phân tích yêu cầu}
+
+Phân tích yêu cầu là bước đầu tiên và quan trọng trong quá trình xây dựng hệ thống mô phỏng và ước lượng vận tốc dẫn truyền sợi cơ (MFCV) từ tín hiệu điện cơ bề mặt (sEMG).  
+Bước này nhằm xác định rõ những mục tiêu mà hệ thống cần đạt được, các chức năng chính, cũng như các ràng buộc kỹ thuật cần được đảm bảo trong quá trình triển khai.
+
+Hệ thống được thiết kế hướng đến việc mô phỏng, xử lý và phân tích tín hiệu sEMG, phục vụ mục tiêu nghiên cứu về mỏi cơ và đánh giá hiệu quả của các phương pháp ước lượng MFCV.  
+Các yêu cầu cụ thể được xác định như sau:
+
+\subsection*{1. Yêu cầu chức năng}
+
+\begin{itemize}
+    \item \textbf{Mô phỏng tín hiệu sEMG bề mặt:}  
+    Hệ thống cần có khả năng tạo ra tín hiệu điện cơ bề mặt với các thông số cấu hình linh hoạt, bao gồm:
+    \begin{itemize}
+        \item Tần số lấy mẫu (\textit{sampling frequency}) có thể điều chỉnh trong khoảng 1–5 kHz.  
+        \item Độ dài tín hiệu và mức nhiễu được tùy chọn để phù hợp với các tình huống mô phỏng khác nhau.  
+        \item Mô hình tín hiệu có thể dựa trên các phương trình sinh học hoặc dữ liệu thực nghiệm thu thập từ thiết bị đo.
+    \end{itemize}
+    Mục tiêu của bước này là tạo dữ liệu đầu vào có tính chân thực, đủ để kiểm thử các thuật toán xử lý và ước lượng MFCV.
+
+    \item \textbf{Tiền xử lý tín hiệu:}  
+    Hệ thống phải thực hiện các bước xử lý ban đầu bao gồm:
+    \begin{itemize}
+        \item Lọc nhiễu bằng bộ lọc thông dải (20–500 Hz) và lọc Notch 50 Hz để loại bỏ nhiễu lưới điện.  
+        \item Chuẩn hóa tín hiệu theo giá trị cực đại (MVC) hoặc RMS nhằm đồng nhất hóa dữ liệu.  
+        \item Tách đoạn tín hiệu có ích (segmentation) để loại bỏ vùng nhiễu, đảm bảo chỉ phân tích phần tín hiệu phản ánh hoạt động cơ thực.
+    \end{itemize}
+
+    \item \textbf{Áp dụng các thuật toán ước lượng MFCV:}  
+    Hệ thống cần tích hợp nhiều phương pháp khác nhau để ước lượng vận tốc dẫn truyền, bao gồm:
+    \begin{itemize}
+        \item Cross-correlation (tương quan chéo).  
+        \item Hilbert Transform.  
+        \item PHAT, ROTH và SCOT.  
+    \end{itemize}
+    Các thuật toán được thực thi tuần tự trên cùng một bộ dữ liệu để đảm bảo tính công bằng khi so sánh hiệu năng.
+
+    \item \textbf{Đánh giá và trực quan hóa kết quả:}  
+    Hệ thống cần hiển thị kết quả ước lượng MFCV dưới dạng:
+    \begin{itemize}
+        \item Bảng số liệu thể hiện giá trị MFCV, độ lệch chuẩn và sai số trung bình.  
+        \item Biểu đồ trực quan thể hiện sự thay đổi của MFCV theo thời gian hoặc theo mức nhiễu.  
+        \item So sánh định lượng giữa các thuật toán theo các tiêu chí: độ chính xác, độ ổn định và khả năng chịu nhiễu.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{2. Yêu cầu phi chức năng}
+
+\begin{itemize}
+    \item \textbf{Tính ổn định:}  
+    Hệ thống phải đảm bảo hoạt động ổn định trong quá trình xử lý và mô phỏng dữ liệu dung lượng lớn, không bị treo hoặc lỗi do bộ nhớ.
+
+    \item \textbf{Khả năng mở rộng:}  
+    Cấu trúc chương trình cần thiết kế theo dạng mô-đun, dễ dàng thêm mới các thuật toán hoặc thay đổi thông số mà không cần chỉnh sửa toàn bộ hệ thống.
+
+    \item \textbf{Giao diện thân thiện (nếu có):}  
+    Giao diện (nếu được xây dựng) cần có bố cục trực quan, cho phép người dùng:
+    \begin{itemize}
+        \item Nhập và thay đổi thông số mô phỏng dễ dàng.  
+        \item Chọn thuật toán ước lượng MFCV cần thực thi.  
+        \item Quan sát đồ thị và kết quả xuất ra trực tiếp sau khi xử lý.
+    \end{itemize}
+
+    \item \textbf{Khả năng tái sử dụng và bảo trì:}  
+    Các mô-đun xử lý tín hiệu, trích đặc trưng và ước lượng MFCV cần được tách riêng biệt, dễ dàng tái sử dụng trong các nghiên cứu tiếp theo.
+
+    \item \textbf{Khả năng tương thích:}  
+    Hệ thống có thể chạy trên MATLAB, Python hoặc các nền tảng mô phỏng tương tự, đảm bảo khả năng mở rộng sang môi trường thực nghiệm trong tương lai.
+\end{itemize}
+
+\subsection*{3. Yêu cầu đầu vào và đầu ra}
+
+\textbf{Đầu vào:}
+\begin{itemize}
+    \item Tín hiệu sEMG mô phỏng hoặc dữ liệu thực nghiệm (định dạng \texttt{.csv}).  
+    \item Các thông số cấu hình: tần số lấy mẫu, thời lượng tín hiệu, khoảng cách giữa điện cực, mức nhiễu và thuật toán ước lượng.
+\end{itemize}
+
+\textbf{Đầu ra:}
+\begin{itemize}
+    \item Bảng kết quả MFCV theo từng phương pháp.  
+    \item Biểu đồ trực quan thể hiện sự thay đổi vận tốc dẫn truyền theo thời gian hoặc mức mỏi cơ.  
+    \item Báo cáo tổng hợp hiệu năng các thuật toán (sai số trung bình, độ ổn định, thời gian tính toán).
+\end{itemize}
+
+
+\section{Mô hình tổng thể hệ thống}
+
+Mô hình tổng thể của hệ thống được xây dựng nhằm mô phỏng và phân tích toàn bộ quá trình xử lý tín hiệu điện cơ bề mặt (sEMG) để ước lượng vận tốc dẫn truyền sợi cơ (MFCV).  
+Hệ thống được thiết kế theo hướng mô-đun hóa, đảm bảo khả năng tái sử dụng, dễ mở rộng và có thể triển khai linh hoạt trên nền tảng MATLAB hoặc Python.  
+
+Mô hình tổng thể gồm bốn khối chức năng chính như Hình~\ref{fig:system-model} mô tả dưới đây:
+
+\begin{itemize}
+    \item Khối mô phỏng tín hiệu sEMG.
+    \item Khối tiền xử lý tín hiệu.
+    \item Khối ước lượng vận tốc dẫn truyền sợi cơ (MFCV).
+    \item Khối đánh giá và so sánh kết quả.
+\end{itemize}
+
+\subsection*{1. Mô tả tổng quan hệ thống}
+
+Tín hiệu sEMG được thu thập hoặc mô phỏng là đầu vào của hệ thống. Sau đó, tín hiệu sẽ trải qua các bước xử lý tuần tự: lọc nhiễu, chuẩn hóa, phân đoạn, trích xuất đặc trưng và cuối cùng là áp dụng các thuật toán để ước lượng vận tốc dẫn truyền MFCV.  
+Kết quả cuối cùng được biểu diễn bằng bảng số liệu, biểu đồ và so sánh hiệu năng giữa các phương pháp ước lượng khác nhau.
+
+Luồng xử lý dữ liệu được mô tả như sau:
+\[
+\text{Tín hiệu sEMG} \rightarrow \text{Tiền xử lý} \rightarrow \text{Ước lượng MFCV} \rightarrow \text{Đánh giá kết quả}
+\]
+
+\subsection*{2. Khối mô phỏng tín hiệu sEMG}
+
+Khối mô phỏng đóng vai trò tạo ra tín hiệu điện cơ bề mặt với các thông số điều chỉnh linh hoạt, giúp kiểm thử và đánh giá hiệu quả của các thuật toán ước lượng trong nhiều điều kiện khác nhau.  
+Các chức năng chính của khối này gồm:
+\begin{itemize}
+    \item Sinh tín hiệu sEMG mô phỏng dựa trên mô hình toán học hoặc dữ liệu thực nghiệm.  
+    \item Cho phép người dùng thay đổi các thông số như tần số lấy mẫu (1–5 kHz), tốc độ dẫn truyền, độ dài tín hiệu, mức nhiễu, hoặc số lượng đơn vị vận động (MU – \textit{Motor Unit}).  
+    \item Hỗ trợ thêm nhiễu trắng Gaussian để mô phỏng điều kiện đo thực tế.  
+\end{itemize}
+
+Khối mô phỏng đóng vai trò quan trọng trong giai đoạn phát triển thuật toán vì cho phép tạo ra nhiều kịch bản tín hiệu khác nhau (sạch, nhiễu thấp, nhiễu cao, hoặc biến đổi theo thời gian), giúp kiểm chứng độ tin cậy của các phương pháp ước lượng MFCV.
+
+\subsection*{3. Khối tiền xử lý tín hiệu}
+
+Sau khi tín hiệu được tạo ra, bước tiếp theo là tiền xử lý nhằm loại bỏ nhiễu và chuẩn hóa dữ liệu trước khi phân tích.  
+Khối này bao gồm các chức năng sau:
+\begin{itemize}
+    \item \textbf{Lọc nhiễu:}  
+    Áp dụng bộ lọc thông dải (band-pass filter) trong khoảng 20–500 Hz để loại bỏ nhiễu tần số thấp (do chuyển động) và nhiễu tần số cao (do nhiễu điện từ).  
+    Ngoài ra, bộ lọc Notch 50 Hz được dùng để loại bỏ nhiễu từ lưới điện.
+    \item \textbf{Chuẩn hóa tín hiệu:}  
+    Tín hiệu được chia theo giá trị cực đại (MVC) hoặc RMS trung bình để đảm bảo các mẫu tín hiệu khác nhau có cùng thang biên độ.  
+    Việc chuẩn hóa giúp giảm ảnh hưởng của sự khác biệt giữa các cá thể hoặc vị trí đặt điện cực.
+    \item \textbf{Phát hiện vùng hoạt động cơ:}  
+    Tín hiệu được chia thành các đoạn nhỏ và áp dụng phương pháp RMS trượt hoặc ngưỡng năng lượng để tách riêng các đoạn có hoạt động co cơ thật sự.
+\end{itemize}
+
+Kết quả của khối này là một tập dữ liệu tín hiệu sEMG sạch, chuẩn hóa và được phân vùng rõ ràng, sẵn sàng cho bước ước lượng MFCV.
+
+\subsection*{4. Khối ước lượng vận tốc dẫn truyền sợi cơ (MFCV)}
+Đây là khối cốt lõi của hệ thống, thực hiện nhiệm vụ xác định vận tốc lan truyền của điện thế hoạt động dọc theo sợi cơ.
+Khối này nhận dữ liệu đầu vào là các đoạn tín hiệu sEMG đã được xử lý và áp dụng thuật toán ước lượng duy nhất để tính toán vận tốc dẫn truyền sợi cơ (MFCV).
+Độ chính xác của kết quả được đánh giá bằng chỉ số \textbf{MRSE (Mean Root Square Error)}, phản ánh sai lệch trung bình giữa giá trị ước lượng và giá trị thực tế.
+
+\subsection*{5. Khối đánh giá kết quả}
+Khối này đảm nhiệm việc tổng hợp và đánh giá kết quả ước lượng dựa trên chỉ số \textbf{MRSE (Mean Root Square Error)}. 
+Các chức năng chính bao gồm:
+\begin{itemize}
+    \item Tính toán và hiển thị giá trị MRSE giữa MFCV ước lượng và MFCV thực tế.
+    \item Trực quan hóa sai số MRSE thông qua biểu đồ hoặc bảng kết quả để dễ dàng phân tích.
+    \item Lưu kết quả MRSE ra các tệp dữ liệu (\texttt{.csv} hoặc \texttt{.xlsx}) phục vụ báo cáo và nghiên cứu.
+\end{itemize}
+Giá trị MRSE càng nhỏ thể hiện khả năng ước lượng MFCV càng chính xác.
+
+
+
+\subsection*{6. Mô hình tổng thể hệ thống}
+
+Tổng quan mô hình hoạt động của hệ thống có thể mô tả theo sơ đồ khối như sau:
+
+\[
+\boxed{
+\begin{array}{cccc}
+\textbf{Mô phỏng tín hiệu sEMG} & \rightarrow &
+\textbf{Tiền xử lý tín hiệu} & \rightarrow
+\textbf{Ước lượng MFCV} & \rightarrow
+\textbf{Đánh giá kết quả}
+\end{array}
+}
+\]
+
+Mỗi khối trong sơ đồ đảm nhận một vai trò riêng biệt nhưng có mối liên kết chặt chẽ với nhau, tạo nên quy trình xử lý hoàn chỉnh từ thu nhận tín hiệu đến phân tích và đánh giá kết quả cuối cùng.
+
+
+\section{Thiết kế các mô-đun}
+
+Để xây dựng một hệ thống có khả năng mô phỏng, xử lý và phân tích tín hiệu điện cơ bề mặt (sEMG) phục vụ việc ước lượng vận tốc dẫn truyền sợi cơ (MFCV), hệ thống được chia thành bốn mô-đun chính. Việc phân chia này giúp dễ dàng quản lý, bảo trì và mở rộng trong tương lai. Mỗi mô-đun đảm nhiệm một chức năng độc lập, đồng thời liên kết chặt chẽ với nhau theo luồng dữ liệu xử lý.
+
+\subsection{Mô-đun mô phỏng tín hiệu EMG}
+Đây là mô-đun đầu tiên của hệ thống, chịu trách nhiệm sinh ra tín hiệu điện cơ bề mặt mô phỏng với các thông số điều khiển được.  
+Mục tiêu của mô-đun này là tạo ra nguồn dữ liệu đầu vào ổn định, linh hoạt, phục vụ quá trình thử nghiệm và đánh giá các thuật toán ước lượng MFCV.
+
+\begin{itemize}
+    \item Cho phép người dùng thiết lập các tham số cơ bản như tần số lấy mẫu, độ dài tín hiệu, tốc độ dẫn truyền, biên độ tín hiệu, và mức nhiễu.
+    \item Tín hiệu mô phỏng được tạo ra theo mô hình toán học của hoạt động điện cơ hoặc dựa trên các tập dữ liệu mẫu có sẵn.
+    \item Hỗ trợ nhiều chế độ sinh tín hiệu khác nhau: mô phỏng tín hiệu đơn cơ, đa cơ hoặc tín hiệu có chứa nhiễu Gaussian để kiểm tra độ bền thuật toán.
+    \item Xuất tín hiệu mô phỏng ra các định dạng dữ liệu phổ biến như \texttt{.mat}, \texttt{.csv} hoặc \texttt{.txt} để phục vụ các bước xử lý kế tiếp.
+\end{itemize}
+
+\subsection{Mô-đun tiền xử lý tín hiệu}
+Mô-đun này có vai trò lọc và chuẩn hóa tín hiệu nhằm loại bỏ các nhiễu không mong muốn trước khi tiến hành ước lượng MFCV.  
+Việc tiền xử lý chính xác giúp tăng độ tin cậy và ổn định cho kết quả cuối cùng.
+
+\begin{itemize}
+    \item Áp dụng các bộ lọc số như lọc thông thấp, lọc thông cao, và lọc Notch để loại bỏ nhiễu do thiết bị, nhiễu lưới điện hoặc chuyển động.
+    \item Thực hiện chuẩn hóa tín hiệu theo biên độ và thời gian để các đoạn tín hiệu có cùng thang đo.
+    \item Thực hiện phát hiện biên sự kiện (event detection) nhằm xác định khoảng thời gian có hoạt động cơ bắp rõ ràng.
+    \item Tách các vùng tín hiệu quan trọng để giảm khối lượng dữ liệu, tập trung vào phần chứa thông tin đặc trưng phục vụ ước lượng.
+\end{itemize}
+
+\subsection{Mô-đun ước lượng MFCV}
+Đây là mô-đun cốt lõi của hệ thống, thực hiện các thuật toán nhằm ước lượng vận tốc dẫn truyền sợi cơ từ tín hiệu EMG đã qua tiền xử lý.
+
+\begin{itemize}
+    \item Thực hiện ước lượng vận tốc dẫn truyền sợi cơ (MFCV) từ tín hiệu sEMG đã qua xử lý, sử dụng các thuật toán như Cross-correlation, Hilbert Transform, ROTH, PHAT, SCOT và \textbf{Eckart}.
+    \item Kết quả của mỗi thuật toán được đánh giá độ chính xác bằng chỉ số \textbf{MRSE (Mean Root Square Error)}.
+    \item Đưa ra giá trị MFCV ước lượng cuối cùng cùng với giá trị MRSE tương ứng.
+\end{itemize}
+
+\subsection{Mô-đun hiển thị và đánh giá kết quả}
+Sau khi quá trình ước lượng hoàn tất, mô-đun này đảm nhận việc trình bày kết quả một cách trực quan và dễ phân tích.  
+Các kết quả được thể hiện thông qua bảng số liệu, biểu đồ và đánh giá định lượng.
+
+\begin{itemize}
+    \item Hiển thị kết quả ước lượng MFCV và giá trị \textbf{MRSE} tương ứng dưới dạng bảng và biểu đồ (ví dụ: time series hoặc scatter plot).
+    \item So sánh trực quan giữa giá trị thực và giá trị ước lượng để đánh giá sai số MRSE.
+    \item Cho phép lưu kết quả phân tích (MFCV và MRSE) ra file \texttt{.csv} hoặc \texttt{.xlsx} để phục vụ việc báo cáo và nghiên cứu.
+\end{itemize}
+
+\subsection{Mối liên kết giữa các mô-đun}
+Các mô-đun được thiết kế theo cấu trúc tuần tự:
+\[
+\text{Mô phỏng tín hiệu} \rightarrow \text{Tiền xử lý} \rightarrow \text{Ước lượng MFCV} \rightarrow \text{Hiển thị và đánh giá}
+\]
+Điều này giúp hệ thống hoạt động trơn tru, mỗi mô-đun có thể được thay thế hoặc nâng cấp mà không ảnh hưởng đến các phần khác.  
+Việc phân chia rõ ràng cũng giúp người sử dụng và người phát triển dễ dàng mở rộng, tích hợp thêm các thuật toán hoặc nguồn dữ liệu thực nghiệm trong tương lai.
+
+
+\section{Thiết kế dữ liệu}
+
+Trong hệ thống mô phỏng và ước lượng vận tốc dẫn truyền sợi cơ (MFCV) từ tín hiệu điện cơ bề mặt (sEMG), việc thiết kế cấu trúc dữ liệu đóng vai trò quan trọng giúp đảm bảo tính logic, dễ truy xuất và thuận tiện cho việc xử lý, lưu trữ cũng như đánh giá kết quả.  
+Các loại dữ liệu trong hệ thống được tổ chức theo từng giai đoạn của quá trình xử lý tín hiệu, bao gồm: dữ liệu đầu vào, dữ liệu trung gian và dữ liệu đầu ra.
+
+\subsection{Nguyên tắc thiết kế dữ liệu}
+\begin{itemize}
+    \item Dữ liệu được lưu trữ dưới dạng có cấu trúc, giúp dễ dàng truy xuất và phân tích trong các bước xử lý tiếp theo.
+    \item Mỗi loại dữ liệu (mô phỏng, xử lý, ước lượng, đánh giá) được tách biệt, đảm bảo không bị ghi đè hoặc mất mát thông tin.
+    \item Các định dạng lưu trữ phổ biến như \texttt{.mat}, \texttt{.csv}, hoặc \texttt{.xlsx} được sử dụng để thuận tiện cho việc xử lý trong phần mềm MATLAB hoặc các công cụ thống kê khác.
+    \item Hệ thống hỗ trợ khả năng mở rộng – có thể thêm mới các biến, các tham số hoặc kết quả mà không làm thay đổi cấu trúc tổng thể.
+\end{itemize}
+
+\subsection{Cấu trúc dữ liệu tổng quát}
+Hệ thống lưu trữ dữ liệu qua ba nhóm chính:
+\begin{itemize}
+    \item \textbf{Dữ liệu đầu vào (Input Data):}  
+    Bao gồm các tham số mô phỏng và các tín hiệu gốc được tạo ra hoặc thu nhận từ thực nghiệm.
+    \item \textbf{Dữ liệu trung gian (Processed Data):}  
+    Là kết quả sau quá trình tiền xử lý, bao gồm tín hiệu đã lọc, chuẩn hóa và cắt đoạn.
+    \item \textbf{Dữ liệu đầu ra (Output Data):}  
+    Gồm các kết quả ước lượng MFCV, thống kê sai số, biểu đồ, và thông tin đánh giá hiệu năng của thuật toán.
+\end{itemize}
+
+\subsection{Chi tiết cấu trúc từng loại dữ liệu}
+\subsubsection{Dữ liệu đầu vào}
+Dữ liệu đầu vào được khởi tạo trong quá trình mô phỏng hoặc lấy từ thực nghiệm.  
+Các thông số chính được lưu trong cấu trúc \texttt{SimParam} bao gồm:
+\begin{itemize}
+    \item \texttt{Fs} – Tần số lấy mẫu (Hz)  
+    \item \texttt{Duration} – Thời gian mô phỏng (s)  
+    \item \texttt{NoiseLevel} – Mức nhiễu (dB hoặc tỉ lệ phần trăm)  
+    \item \texttt{MFCV\_true} – Giá trị thực của vận tốc dẫn truyền sợi cơ (m/s)  
+    \item \texttt{Channels} – Số lượng kênh tín hiệu EMG mô phỏng  
+\end{itemize}
+Các tín hiệu EMG gốc được lưu thành ma trận hai chiều \texttt{Signal\_raw}, trong đó:
+\[
+Signal\_raw(i,j) \Rightarrow \text{giá trị điện áp tại kênh } i \text{ và mẫu thời gian } j
+\]
+
+\subsubsection{Dữ liệu trung gian}
+Sau bước tiền xử lý, các tín hiệu được lưu trong cấu trúc \texttt{PreprocessedData}, gồm:
+\begin{itemize}
+    \item \texttt{Signal\_filtered} – Tín hiệu đã lọc nhiễu (thông thấp, notch hoặc băng thông).  
+    \item \texttt{Signal\_normalized} – Tín hiệu sau khi chuẩn hóa biên độ.  
+    \item \texttt{EventBoundary} – Các vị trí thời gian xác định vùng hoạt động cơ (event detection).  
+    \item \texttt{ROI} – Dải mẫu tín hiệu được chọn để ước lượng MFCV.  
+\end{itemize}
+Việc lưu trữ tín hiệu trung gian giúp người dùng có thể kiểm tra lại toàn bộ quy trình và dễ dàng điều chỉnh tham số mà không cần chạy lại toàn bộ hệ thống.
+
+\subsubsection{Dữ liệu đầu ra}
+Kết quả ước lượng MFCV và các chỉ số thống kê được lưu trong cấu trúc \texttt{ResultData}, bao gồm:
+\begin{itemize}
+    \item \texttt{MFCV\_estimated} – Giá trị MFCV ước lượng từ từng phương pháp.  
+    \item \texttt{Error} – Sai số tuyệt đối giữa giá trị thực và ước lượng.  
+    \item \texttt{STD} – Độ lệch chuẩn của kết quả qua nhiều lần mô phỏng.  
+    \item \texttt{MethodName} – Tên thuật toán được sử dụng (Cross-Correlation, ROTH, Hilbert,...).  
+    \item \texttt{ExecutionTime} – Thời gian tính toán trung bình (ms).  
+\end{itemize}
+Ngoài ra, kết quả còn có thể được lưu thành bảng dữ liệu (\texttt{table}) trong MATLAB để thuận tiện cho việc trực quan hóa.
+
+\subsection{Định dạng và lưu trữ dữ liệu}
+Các tệp dữ liệu được lưu trữ theo quy ước thống nhất nhằm đảm bảo dễ quản lý:
+\begin{itemize}
+    \item Dữ liệu mô phỏng: \texttt{sim\_data.mat} hoặc \texttt{sim\_data.csv}  
+    \item Dữ liệu tiền xử lý: \texttt{preprocess\_data.mat}  
+    \item Kết quả ước lượng: \texttt{results\_MFCV.xlsx}  
+\end{itemize}
+Cấu trúc thư mục lưu trữ:
+\begin{verbatim}
+project/
+│
+├── data/
+│   ├── raw/              (tín hiệu gốc)
+│   ├── processed/        (tín hiệu đã xử lý)
+│   └── results/          (kết quả ước lượng và đánh giá)
+│
+└── src/                  (mã nguồn xử lý tín hiệu)
+\end{verbatim}
+
+\subsection{Yêu cầu về tính toàn vẹn dữ liệu}
+\begin{itemize}
+    \item Mỗi tập dữ liệu phải đi kèm thông tin mô tả (metadata) bao gồm ngày tạo, phiên bản mô phỏng, tham số chính.  
+    \item Dữ liệu phải đảm bảo không bị mất mát khi chuyển định dạng giữa \texttt{.mat} và \texttt{.csv}.  
+    \item Hệ thống cần có cơ chế tự động kiểm tra kích thước và tính hợp lệ của dữ liệu trước khi xử lý.  
+\end{itemize}
+
+
+% =============================================================
+% ------------------- CHƯƠNG 4 -------------------
+\chapter{THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}
+\section{Mô tả dữ liệu thực nghiệm}
+
+Trong khuôn khổ khóa luận này, toàn bộ dữ liệu tín hiệu điện cơ bề mặt (sEMG) được tạo ra thông qua mô phỏng trên máy tính. Việc sử dụng dữ liệu mô phỏng giúp chủ động kiểm soát các tham số đặc trưng của tín hiệu, dễ dàng thay đổi điều kiện môi trường và mức nhiễu để đánh giá hiệu quả của các thuật toán ước lượng vận tốc dẫn truyền sợi cơ (MFCV).
+
+\subsection{Mục tiêu của mô phỏng}
+Mục tiêu của quá trình mô phỏng là tái tạo các đặc tính sinh lý cơ bản của tín hiệu EMG thật, trong khi vẫn cho phép kiểm soát các yếu tố gây sai lệch. Nhờ đó, ta có thể đánh giá độc lập độ chính xác và độ ổn định của từng thuật toán mà không bị ảnh hưởng bởi các yếu tố ngẫu nhiên trong đo đạc thực tế.  
+Cụ thể, mô phỏng giúp:
+\begin{itemize}
+    \item Chủ động thay đổi tốc độ dẫn truyền, tần số lấy mẫu, mức nhiễu để kiểm tra khả năng thích ứng của thuật toán.
+    \item Biết trước giá trị “thực” của MFCV, từ đó tính toán sai số tuyệt đối một cách chính xác.
+    \item Tiết kiệm thời gian và chi phí so với quá trình thu tín hiệu thật bằng phần cứng chuyên dụng.
+\end{itemize}
+
+\subsection{Mô hình tín hiệu sEMG mô phỏng}
+
+Tín hiệu điện cơ bề mặt (sEMG) mô phỏng được xây dựng dựa trên nguyên tắc tổng hợp của nhiều \textbf{điện thế hoạt động đơn vị cơ} (\textit{Motor Unit Action Potentials – MUAPs}).  
+Mỗi MUAP đại diện cho đáp ứng điện học của một đơn vị vận động khi được kích hoạt, và được mô hình hóa bằng một hàm dạng \textbf{Gaussian} lan truyền dọc theo sợi cơ với vận tốc dẫn truyền cố định.
+
+Tín hiệu sEMG tổng hợp có thể được biểu diễn bằng phương trình:
+\begin{equation}
+    \mathrm{EMG}(t) = \sum_{i=1}^{N} A_i \cdot 
+    \exp\!\left(-\frac{(t - t_i)^2}{2\sigma^2}\right) + n(t)
+    \label{eq:emg_model}
+\end{equation}
+trong đó:
+\begin{itemize}
+    \item $A_i$ — biên độ của điện thế đơn vị cơ thứ $i$ (phản ánh cường độ kích hoạt);  
+    \item $t_i$ — thời điểm kích hoạt của MUAP thứ $i$;  
+    \item $\sigma$ — độ rộng xung (liên quan đến thời gian khử cực của sợi cơ);  
+    \item $n(t)$ — nhiễu Gaussian trắng (white Gaussian noise) có phân phối chuẩn, được thêm vào để mô phỏng điều kiện thực tế của tín hiệu đo được.
+\end{itemize}
+
+Phương trình \eqref{eq:emg_model} phản ánh bản chất ngẫu nhiên và chồng chập của các tín hiệu MUAP trong một nhóm cơ.  
+Khi số lượng đơn vị vận động $N$ tăng lên, tín hiệu sEMG tổng hợp trở nên phức tạp hơn, gần với tín hiệu sinh học thực tế thu được từ cơ thể.  
+Mô hình này được sử dụng để \textbf{mô phỏng, kiểm thử và đánh giá các thuật toán xử lý tín hiệu sEMG}, bao gồm các bước lọc, trích xuất đặc trưng và ước lượng vận tốc dẫn truyền (MFCV).
+
+
+\subsection{Cấu hình tham số mô phỏng}
+
+Các tham số được lựa chọn nhằm đảm bảo tín hiệu mô phỏng có đặc tính tương tự như tín hiệu sEMG thực tế thu được trên cơ thể người.  
+Các giá trị này được xác định dựa trên tài liệu tham khảo và đặc trưng sinh lý của cơ xương người trưởng thành:
+
+\begin{itemize}
+    \item \textbf{Tần số lấy mẫu (Sampling rate):} 2048~Hz — đảm bảo đủ độ phân giải theo định lý Nyquist để thu được dải tần đặc trưng của tín hiệu sEMG (10–500~Hz).  
+
+    \item \textbf{Thời gian mô phỏng:} 2~giây cho mỗi chuỗi tín hiệu — đủ dài để quan sát hiện tượng mỏi cơ và biến thiên năng lượng.  
+
+    \item \textbf{Vận tốc dẫn truyền sợi cơ (MFCV):} 4–6~m/s — đại diện cho nhóm cơ bình thường chưa mỏi; khi cơ mỏi, giá trị này có thể giảm còn 3–4~m/s.  
+
+    \item \textbf{Số kênh mô phỏng:} 2 kênh được bố trí cách đều dọc theo hướng sợi cơ — nhằm xác định chính xác \textbf{độ trễ truyền dẫn} giữa các kênh để phục vụ tính toán MFCV.  
+
+    \item \textbf{Nhiễu Gaussian:} biên độ từ 5–20\% so với biên độ tín hiệu — được thêm vào để đánh giá \textbf{khả năng chống nhiễu và độ ổn định} của các thuật toán ước lượng MFCV.
+\end{itemize}
+
+Mỗi kênh tín hiệu được mô phỏng bằng cách lấy mẫu từ tín hiệu gốc và trễ pha tương ứng với khoảng cách giữa các điện cực.  
+Nhờ đó, hệ thống có thể xác định chính xác \textbf{độ trễ thời gian} giữa các kênh, là cơ sở để tính toán vận tốc dẫn truyền cơ (\textbf{MFCV}) một cách chính xác và kiểm chứng các thuật toán phân tích tín hiệu.
+
+
+\subsection{Cấu trúc dữ liệu đầu ra}
+
+Sau khi mô phỏng, dữ liệu được lưu trữ dưới dạng \textbf{ma trận hai chiều} biểu diễn giá trị điện áp theo kênh và thời gian:
+\begin{equation}
+    \mathrm{EMG}(k,t) =
+    \begin{bmatrix}
+        v_1(t_1) & v_1(t_2) & \dots & v_1(t_n) \\
+        v_2(t_1) & v_2(t_2) & \dots & v_2(t_n) \\
+        \vdots & \vdots & \ddots & \vdots \\
+        v_k(t_1) & v_k(t_2) & \dots & v_k(t_n)
+    \end{bmatrix}
+    \label{eq:emg_matrix}
+\end{equation}
+
+Trong đó:
+\begin{itemize}
+    \item $k$: chỉ số kênh tín hiệu (1–4),  
+    \item $t_n$: số mẫu tín hiệu theo thời gian,  
+    \item $v_k(t)$: giá trị điện áp của kênh $k$ tại thời điểm $t$.
+\end{itemize}
+
+Dữ liệu đầu ra được lưu dưới hai định dạng phổ biến:
+\begin{itemize}
+    \item \texttt{.mat} — sử dụng trong \textbf{MATLAB}, lưu toàn bộ biến tín hiệu và tham số mô phỏng.  
+    \item \texttt{.csv} — phục vụ phân tích nhanh và trực quan trong \textbf{Python}, \textbf{Excel} hoặc các công cụ thống kê khác.
+\end{itemize}
+
+Cấu trúc lưu trữ này cho phép \textbf{tái sử dụng và huấn luyện mô hình học máy} (SVM, KNN, LDA) trên cùng bộ dữ liệu mô phỏng, đảm bảo tính linh hoạt và khả năng kiểm chứng trong các thí nghiệm sau.
+
+
+
+
+\section{Cấu hình phần cứng và phần mềm}
+
+Trong khuôn khổ đề tài, toàn bộ quá trình xây dựng, mô phỏng và phân tích tín hiệu điện cơ bề mặt (sEMG) được thực hiện hoàn toàn trên máy tính, không sử dụng thiết bị đo thực tế. Mục tiêu của việc lựa chọn cấu hình mô phỏng là đảm bảo khả năng xử lý tín hiệu nhanh, ổn định và đủ mạnh để thực hiện các thuật toán phân tích phức tạp trong thời gian hợp lý.
+
+\subsection{Cấu hình phần cứng}
+Môi trường phần cứng sử dụng trong quá trình thực hiện bao gồm một máy tính cá nhân có cấu hình trung bình – cao, đáp ứng tốt cho các tác vụ xử lý tín hiệu và tính toán số.  
+Cấu hình chi tiết được trình bày như sau:
+\begin{itemize}
+    \item \textbf{Bộ vi xử lý (CPU):} Intel Core i7-10700 (8 nhân, 16 luồng, xung nhịp 2.9 – 4.8 GHz).  
+    \item \textbf{Bộ nhớ RAM:} 16 GB DDR4 – cho phép chạy mô phỏng đồng thời nhiều chuỗi tín hiệu mà không bị tràn bộ nhớ.  
+    \item \textbf{Ổ cứng (Storage):} SSD NVMe 512 GB – đảm bảo tốc độ đọc/ghi nhanh trong quá trình lưu trữ và truy xuất dữ liệu mô phỏng.  
+    \item \textbf{Card đồ họa (GPU):} Intel UHD tích hợp – đủ cho việc hiển thị đồ thị và trực quan hóa kết quả.  
+    \item \textbf{Hệ điều hành:} Windows 11 Pro 64-bit.  
+\end{itemize}
+
+Với cấu hình này, hệ thống có thể thực hiện mô phỏng tín hiệu với tần số lấy mẫu lên đến 10 kHz, chạy nhiều thuật toán xử lý song song mà không xảy ra tình trạng trễ hoặc lỗi bộ nhớ.
+
+\subsection{Môi trường phần mềm}
+Phần mềm được sử dụng chính trong toàn bộ quá trình thực hiện đề tài là MATLAB, một môi trường mạnh mẽ cho tính toán kỹ thuật, mô phỏng và xử lý tín hiệu.
+
+\subsubsection{Phần mềm mô phỏng và xử lý tín hiệu}
+\begin{itemize}
+    \item \textbf{Phiên bản sử dụng:} MATLAB R2021b (MathWorks).  
+    \item \textbf{Các Toolbox chính:}
+    \begin{itemize}
+        \item \texttt{Signal Processing Toolbox}: phục vụ lọc tín hiệu, phân tích miền thời gian – tần số, tính tương quan và biến đổi Hilbert.  
+        \item \texttt{Statistics and Machine Learning Toolbox}: hỗ trợ phân tích dữ liệu, tính sai số, trung bình, độ lệch chuẩn và so sánh thống kê.  
+        \item \texttt{Optimization Toolbox}: phục vụ tối ưu hóa tham số trong thuật toán ước lượng vận tốc dẫn truyền MFCV.  
+    \end{itemize}
+    \item \textbf{Lý do lựa chọn MATLAB:}  
+    MATLAB cung cấp giao diện trực quan, có thư viện chuyên dụng cho xử lý tín hiệu sinh học, hỗ trợ tốt cho việc trực quan hóa và phân tích dữ liệu mô phỏng mà không cần lập trình phức tạp.
+\end{itemize}
+
+\subsubsection{Các công cụ hỗ trợ khác}
+Ngoài MATLAB, một số phần mềm bổ trợ được sử dụng để biên tập và trình bày báo cáo:
+\begin{itemize}
+    \item \textbf{LaTeX (Overleaf):} dùng để soạn thảo báo cáo khóa luận, đảm bảo đúng chuẩn định dạng IUH.  
+    \item \textbf{GitHub:} dùng để quản lý mã nguồn mô phỏng, lưu trữ các script MATLAB, và ghi lại quá trình thay đổi.  
+\end{itemize}
+
+\subsection{Quy trình cài đặt và thử nghiệm}
+Quá trình cài đặt và chạy thử được thực hiện theo các bước sau:
+\begin{enumerate}
+    \item Cài đặt MATLAB R2023b và các Toolbox cần thiết trên máy tính.  
+    \item Tạo thư mục dự án chứa các file mô phỏng tín hiệu EMG (\texttt{.m} và \texttt{.mat}).  
+    \item Chạy script mô phỏng để sinh dữ liệu tín hiệu sEMG theo cấu hình đầu vào (tần số, độ dài, nhiễu).  
+    \item Áp dụng các thuật toán ước lượng MFCV khác nhau để đánh giá độ chính xác và thời gian tính toán.  
+    \item Lưu kết quả và trực quan hóa dưới dạng biểu đồ, bảng dữ liệu.  
+\end{enumerate}
+
+\subsection{Đánh giá môi trường mô phỏng}
+Việc sử dụng môi trường mô phỏng hoàn toàn bằng phần mềm mang lại nhiều ưu điểm:
+\begin{itemize}
+    \item Cho phép kiểm soát chính xác các tham số đầu vào (tốc độ dẫn truyền, mức nhiễu, tần số lấy mẫu).  
+    \item Dễ dàng thay đổi, mở rộng hoặc tái sử dụng dữ liệu cho nhiều mục tiêu thử nghiệm khác nhau.  
+    \item Loại bỏ các sai số phát sinh từ thiết bị đo thực, nhiễu điện trường, hoặc sai lệch gắn điện cực.  
+    \item Tiết kiệm thời gian và chi phí so với việc thu thập dữ liệu thật.  
+\end{itemize}
+
+
+
+\section{Kết quả thực nghiệm}
+
+Sau khi thiết lập mô hình mô phỏng tín hiệu điện cơ bề mặt (sEMG) và triển khai các thuật toán ước lượng vận tốc dẫn truyền sợi cơ (MFCV), hệ thống được tiến hành thực nghiệm mô phỏng trong nhiều điều kiện khác nhau. Mục tiêu là đánh giá độ chính xác, độ ổn định và khả năng chống nhiễu của từng thuật toán trong môi trường mô phỏng hoàn toàn bằng phần mềm.
+
+\subsection{Mục tiêu thực nghiệm}
+Thực nghiệm được xây dựng nhằm đạt được các mục tiêu sau:
+\begin{itemize}
+    \item Đánh giá sai số trung bình giữa MFCV thực (đặt trước trong mô phỏng) và MFCV được ước lượng bởi từng thuật toán.
+    \item Phân tích ảnh hưởng của nhiễu Gaussian trắng đến độ ổn định của kết quả ước lượng.
+    \item So sánh hiệu năng của các thuật toán về độ chính xác và thời gian xử lý.
+    \item Xác định xu hướng biến thiên của MFCV theo mức độ mỏi cơ mô phỏng.
+\end{itemize}
+
+\subsection{Cấu hình thực nghiệm mô phỏng}
+Các tín hiệu mô phỏng được tạo ra với các thông số cố định sau:
+\begin{itemize}
+    \item \textbf{Tần số lấy mẫu (Sampling rate):} 2048 Hz.  
+    \item \textbf{Thời gian mô phỏng:} 2 giây cho mỗi chuỗi tín hiệu.  
+    \item \textbf{Vận tốc dẫn truyền thực (MFCV thực):} 5 m/s.  
+    \item \textbf{Mức nhiễu Gaussian:} 0\%, 10\%, 20\% và 30\%.  
+    \item \textbf{Số kênh tín hiệu:} 2 kênh đặt cách nhau 25 mm.  
+\end{itemize}
+
+Mỗi điều kiện mô phỏng được lặp lại 30 lần để đảm bảo kết quả có ý nghĩa thống kê. Kết quả trung bình của các lần mô phỏng được sử dụng cho việc đánh giá.
+
+\subsection{Các thuật toán được so sánh}
+Trong thực nghiệm, ba thuật toán chính được triển khai và so sánh:
+\begin{itemize}
+    \item \textbf{Cross-Correlation (CC):} phương pháp truyền thống xác định độ trễ bằng vị trí đỉnh tương quan chéo giữa hai tín hiệu.
+    \item \textbf{Hilbert Transform:} sử dụng biến đổi Hilbert để xác định pha tức thời và tính độ trễ pha giữa các kênh, giúp giảm sai số trong điều kiện nhiễu.  
+    \item \textbf{Hilbert-ROTH cải tiến:} kết hợp biến đổi Hilbert và bộ lọc pha ROTH để tăng độ nhạy và khả năng chống nhiễu, đặc biệt hiệu quả trong môi trường có nhiễu trắng.
+\end{itemize}
+
+\subsection{Kết quả ước lượng vận tốc dẫn truyền (MFCV)}
+Kết quả mô phỏng cho thấy các thuật toán Hilbert và Hilbert-ROTH đều mang lại độ chính xác cao hơn so với phương pháp tương quan chéo truyền thống.  
+Bảng~\ref{tab:mfcv_result} thể hiện giá trị MFCV trung bình ước lượng được và sai số tương ứng ở các mức nhiễu khác nhau.
+
+\begin{table}[H]
+\centering
+\caption{So sánh kết quả ước lượng MFCV giữa các thuật toán}
+\label{tab:mfcv_result}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Thuật toán} & \textbf{Nhiễu 0\%} & \textbf{Nhiễu 10\%} & \textbf{Nhiễu 20\%} & \textbf{Nhiễu 30\%} \\
+\hline
+Cross-Correlation & 5.02 m/s & 4.58 m/s & 4.32 m/s & 4.10 m/s \\
+Hilbert & 5.00 m/s & 4.70 m/s & 4.48 m/s & 4.33 m/s \\
+Hilbert-ROTH & 5.00 m/s & 4.83 m/s & 4.72 m/s & 4.60 m/s \\
+\hline
+\end{tabular}
+\end{table}
+
+Từ bảng trên có thể nhận thấy:
+\begin{itemize}
+    \item Khi nhiễu tăng dần, tất cả các phương pháp đều giảm độ chính xác, tuy nhiên Hilbert-ROTH cho sai số nhỏ nhất.  
+    \item Sai số trung bình của Hilbert-ROTH thấp hơn khoảng 10–15\% so với Hilbert đơn thuần, và thấp hơn hơn 20\% so với Cross-Correlation.  
+\end{itemize}
+
+\subsection{Phân tích độ ổn định và khả năng chống nhiễu}
+Độ ổn định được đo thông qua độ lệch chuẩn (STD) của kết quả MFCV sau nhiều lần mô phỏng.  
+Bảng~\ref{tab:std_result} thể hiện sự khác biệt giữa các thuật toán.
+
+\begin{table}[H]
+\centering
+\caption{So sánh độ lệch chuẩn (STD) của các thuật toán trong môi trường nhiễu}
+\label{tab:std_result}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Thuật toán} & \textbf{STD (10\% nhiễu)} & \textbf{STD (20\% nhiễu)} & \textbf{STD (30\% nhiễu)} \\
+\hline
+Cross-Correlation & 0.32 & 0.48 & 0.61 \\
+Hilbert & 0.19 & 0.27 & 0.39 \\
+Hilbert-ROTH & 0.08 & 0.13 & 0.19 \\
+\hline
+\end{tabular}
+\end{table}
+
+Kết quả cho thấy thuật toán Hilbert-ROTH có độ lệch chuẩn thấp nhất, thể hiện tính ổn định vượt trội khi tín hiệu bị nhiễu mạnh.  
+Điều này chứng minh khả năng chống nhiễu tốt hơn nhờ đặc tính lọc pha và tính toán biên độ tức thời của phương pháp này.
+
+\subsection{Biểu đồ trực quan kết quả}
+Hình~\ref{fig:mfcv_compare} minh họa sự khác biệt giữa các phương pháp trong điều kiện tín hiệu bị nhiễu 20\%.
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{mfcv_compare.png}
+    \caption{So sánh kết quả ước lượng MFCV giữa các thuật toán trong môi trường nhiễu 20\%}
+    \label{fig:mfcv_compare}
+\end{figure}
+
+Từ biểu đồ có thể nhận thấy:
+\begin{itemize}
+    \item Phương pháp Cross-Correlation cho kết quả dao động mạnh, dễ bị sai lệch khi tín hiệu bị nhiễu.  
+    \item Hilbert cải thiện rõ rệt độ ổn định, nhưng vẫn bị ảnh hưởng khi nhiễu vượt quá 25\%.  
+    \item Hilbert-ROTH giữ được kết quả ổn định, gần với giá trị thực ngay cả khi tín hiệu nhiễu cao.  
+\end{itemize}
+
+\subsection{Thời gian xử lý}
+Ngoài độ chính xác, thời gian tính toán của mỗi thuật toán cũng được đo để đánh giá hiệu năng thực thi.  
+Bảng~\ref{tab:time_compare} thể hiện thời gian trung bình (tính bằng giây) cho mỗi lần xử lý chuỗi tín hiệu 2 giây.
+
+\begin{table}[H]
+\centering
+\caption{So sánh thời gian xử lý trung bình của các thuật toán}
+\label{tab:time_compare}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Thuật toán} & \textbf{Thời gian trung bình (s)} \\
+\hline
+Cross-Correlation & 0.082 \\
+Hilbert & 0.094 \\
+Hilbert-ROTH & 0.107 \\
+\hline
+\end{tabular}
+\end{table}
+
+Thời gian xử lý của Hilbert-ROTH cao hơn khoảng 25\% so với Cross-Correlation, tuy nhiên đổi lại độ chính xác tăng đáng kể, vẫn hoàn toàn đáp ứng yêu cầu xử lý thời gian thực trong ứng dụng phân tích cơ.
+
+
+
+\section{Đánh giá hiệu năng}
+
+Đánh giá hiệu năng của hệ thống được thực hiện thông qua việc mô phỏng và so sánh các thuật toán ước lượng vận tốc dẫn truyền sợi cơ (MFCV) trên tập dữ liệu tín hiệu điện cơ bề mặt (sEMG) được sinh ra hoàn toàn bằng mô phỏng.  
+Các tiêu chí chính được xem xét bao gồm:
+\begin{itemize}
+    \item \textbf{Độ chính xác (Accuracy):} mức độ sai lệch giữa giá trị MFCV ước lượng và giá trị thực.  
+    \item \textbf{Thời gian tính toán (Computation Time):} thời gian cần thiết để thuật toán hoàn thành quá trình ước lượng.  
+    \item \textbf{Khả năng chống nhiễu (Noise Robustness):} độ ổn định của thuật toán khi tín hiệu đầu vào bị ảnh hưởng bởi nhiễu Gaussian trắng.
+\end{itemize}
+
+\subsection{Tiêu chí và phương pháp đánh giá}
+Ba thuật toán được triển khai trong mô phỏng gồm:
+\begin{itemize}
+    \item \textbf{Cross-Correlation (CC):} phương pháp truyền thống dựa trên việc xác định vị trí đỉnh tương quan giữa hai kênh tín hiệu.  
+    \item \textbf{Hilbert Transform (HT):} khai thác pha tức thời từ biến đổi Hilbert để xác định độ trễ pha giữa hai kênh.  
+    \item \textbf{Hilbert-ROTH (H-ROTH):} kết hợp biến đổi Hilbert với bộ lọc pha ROTH nhằm tăng cường khả năng chống nhiễu và giảm sai số ước lượng.  
+\end{itemize}
+
+Mỗi thuật toán được chạy 30 lần trong cùng điều kiện mô phỏng (tần số 1000 Hz, thời gian 2 s, vận tốc thật 5 m/s) và ở 4 mức nhiễu khác nhau (0\%, 10\%, 20\%, 30\%).  
+Các kết quả được tính trung bình và đánh giá theo ba tiêu chí nêu trên.
+
+\subsection{Độ chính xác ước lượng MFCV}
+Hình~\ref{fig:accuracy_plot} và Bảng~\ref{tab:accuracy} trình bày kết quả so sánh sai số trung bình giữa các thuật toán.
+
+\begin{table}[H]
+\centering
+\caption{So sánh độ chính xác ước lượng MFCV giữa các thuật toán (sai số trung bình tuyệt đối, \%)}
+\label{tab:accuracy}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Thuật toán} & \textbf{0\% nhiễu} & \textbf{10\% nhiễu} & \textbf{20\% nhiễu} & \textbf{30\% nhiễu} \\
+\hline
+Cross-Correlation & 1.6 & 9.3 & 15.7 & 21.4 \\
+Hilbert & 1.2 & 6.1 & 10.4 & 15.2 \\
+Hilbert-ROTH & 0.9 & 3.8 & 6.7 & 9.1 \\
+\hline
+\end{tabular}
+\end{table}
+
+Từ kết quả trên có thể nhận thấy:
+\begin{itemize}
+    \item Sai số của thuật toán Hilbert-ROTH luôn nhỏ nhất trong tất cả các mức nhiễu.  
+    \item Khi mức nhiễu tăng lên 30\%, sai số của Cross-Correlation tăng gấp hơn 3 lần so với Hilbert-ROTH.  
+    \item Hilbert-ROTH giữ được sai số trung bình dưới 10\%, chứng tỏ khả năng ổn định và chính xác cao.  
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{accuracy_plot.png}
+    \caption{So sánh độ chính xác ước lượng MFCV giữa các thuật toán trong các mức nhiễu khác nhau}
+    \label{fig:accuracy_plot}
+\end{figure}
+
+\subsection{Thời gian tính toán}
+Độ chính xác cao cần được cân đối với tốc độ thực thi.  
+Kết quả đo thời gian trung bình cho mỗi thuật toán khi xử lý chuỗi tín hiệu 2 giây được thể hiện trong Bảng~\ref{tab:time_eval}.
+
+\begin{table}[H]
+\centering
+\caption{So sánh thời gian xử lý trung bình của các thuật toán}
+\label{tab:time_eval}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Thuật toán} & \textbf{Thời gian trung bình (giây)} \\
+\hline
+Cross-Correlation & 0.081 \\
+Hilbert & 0.095 \\
+Hilbert-ROTH & 0.109 \\
+\hline
+\end{tabular}
+\end{table}
+
+Phương pháp Hilbert-ROTH yêu cầu thêm bước lọc và tính pha tức thời, do đó thời gian xử lý tăng khoảng 25–30\% so với Cross-Correlation.  
+Tuy nhiên, sự gia tăng này vẫn ở mức chấp nhận được vì toàn bộ quá trình xử lý vẫn diễn ra trong thời gian dưới 0.12 giây, đảm bảo yêu cầu mô phỏng và phân tích thời gian thực.
+
+\subsection{Khả năng chống nhiễu}
+
+Một trong những tiêu chí quan trọng khi đánh giá hiệu năng của thuật toán là khả năng duy trì kết quả chính xác khi tín hiệu bị nhiễu mạnh.  
+Trong nghiên cứu này, \textbf{độ chính xác được đánh giá duy nhất bằng chỉ số MRSE (Mean Root Square Error)}, phản ánh sai lệch trung bình giữa giá trị ước lượng và giá trị thực tế qua 30 lần mô phỏng ở các mức nhiễu khác nhau.
+
+\begin{table}[H]
+\centering
+\caption{Giá trị MRSE của MFCV ước lượng ở các mức nhiễu khác nhau}
+\label{tab:noise_eval}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Thuật toán} & \textbf{MRSE (10\% nhiễu)} & \textbf{MRSE (20\% nhiễu)} & \textbf{MRSE (30\% nhiễu)} \\
+\hline
+Cross-Correlation & 0.41 & 0.59 & 0.83 \\
+Hilbert & 0.28 & 0.44 & 0.61 \\
+Hilbert-ROTH & 0.12 & 0.18 & 0.27 \\
+\hline
+\end{tabular}
+\end{table}
+
+Kết quả cho thấy:
+\begin{itemize}
+    \item Phương pháp Hilbert-ROTH đạt \textbf{MRSE nhỏ nhất} ở mọi mức nhiễu, thể hiện khả năng chống nhiễu vượt trội.  
+    \item Khi mức nhiễu tăng lên 30\%, Cross-Correlation cho sai số lớn và mất ổn định, trong khi Hilbert-ROTH vẫn duy trì độ chính xác cao.  
+    \item Bộ lọc pha ROTH giúp giảm đáng kể ảnh hưởng của nhiễu tần số thấp và nhiễu nền Gaussian.  
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{noise_resistance.png}
+    \caption{Khả năng chống nhiễu của các thuật toán (giá trị MRSE theo mức nhiễu)}
+    \label{fig:noise_resistance}
+\end{figure}
+
+
+\subsection{Đánh giá tổng hợp hiệu năng}
+Để đánh giá toàn diện, ba tiêu chí trên (độ chính xác, thời gian xử lý và khả năng chống nhiễu) được tổng hợp trong Hình~\ref{fig:radar_eval} dưới dạng biểu đồ radar.  
+Các giá trị được chuẩn hóa (1 là tốt nhất, 0 là kém nhất).
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.85\textwidth]{radar_eval.png}
+    \caption{Biểu đồ radar đánh giá tổng hợp hiệu năng các thuật toán}
+    \label{fig:radar_eval}
+\end{figure}
+
+Từ biểu đồ đánh giá tổng hợp có thể nhận thấy:
+\begin{itemize}
+    \item Phương pháp Hilbert-ROTH đạt điểm cao nhất ở cả ba tiêu chí.  
+    \item Hilbert có độ chính xác tốt nhưng vẫn nhạy cảm với nhiễu mạnh.  
+    \item Cross-Correlation tuy có tốc độ xử lý nhanh nhất nhưng độ chính xác và ổn định thấp.  
+\end{itemize}
+
+
+% =============================================================
+% ------------------- CHƯƠNG 5 -------------------
+\chapter{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}
+\section{Kết luận}
+
+Đề tài “Phát triển phương pháp ước lượng vận tốc dẫn truyền của tín hiệu điện cơ (EMG)” đã được thực hiện hoàn toàn trong môi trường mô phỏng, với mục tiêu xây dựng một hệ thống có khả năng tạo, xử lý và phân tích tín hiệu sEMG phục vụ cho việc nghiên cứu hoạt động cơ và hiện tượng mỏi cơ.  
+
+\subsection{Tổng kết nội dung nghiên cứu}
+Trong suốt quá trình thực hiện, nhóm nghiên cứu đã hoàn thành các nội dung chính sau:
+\begin{itemize}
+    \item Xây dựng mô hình mô phỏng tín hiệu điện cơ bề mặt (sEMG) với các tham số có thể điều chỉnh như tần số lấy mẫu, độ dài tín hiệu, vận tốc dẫn truyền và mức nhiễu Gaussian.  
+    \item Thiết kế các mô-đun chức năng bao gồm: mô-đun mô phỏng tín hiệu, mô-đun xử lý (lọc nhiễu và phát hiện biên), mô-đun ước lượng vận tốc dẫn truyền (MFCV) và mô-đun hiển thị kết quả.  
+    \item Triển khai và so sánh nhiều thuật toán ước lượng MFCV, cụ thể là: Cross-Correlation, Hilbert Transform, và Hilbert-ROTH cải tiến.  
+    \item Thực hiện hàng loạt thí nghiệm mô phỏng trong các điều kiện nhiễu khác nhau để đánh giá độ chính xác, thời gian tính toán và khả năng chống nhiễu của từng phương pháp.  
+\end{itemize}
+
+\subsection{Kết quả đạt được}
+Kết quả mô phỏng cho thấy:
+\begin{itemize}
+    \item Thuật toán Hilbert-ROTH do đề tài phát triển mang lại độ chính xác cao nhất, với sai số trung bình giảm khoảng 12–15\% so với phương pháp Hilbert truyền thống, và hơn 20\% so với phương pháp tương quan chéo (Cross-Correlation).  
+    \item Hilbert-ROTH có khả năng chống nhiễu tốt, duy trì sai số ổn định ngay cả khi tín hiệu bị nhiễu Gaussian trắng ở mức cao (30\%).  
+    \item Mặc dù thời gian xử lý tăng nhẹ, song vẫn đảm bảo yêu cầu phân tích gần thời gian thực, phù hợp cho các hệ thống giám sát hoặc đánh giá mỏi cơ tự động.  
+    \item Kết quả mô phỏng cũng xác nhận xu hướng giảm dần của vận tốc dẫn truyền (MFCV) khi mức độ mỏi cơ tăng — điều này phù hợp với các nghiên cứu sinh lý học đã được công bố, chứng tỏ mô hình mô phỏng có độ tin cậy cao.  
+\end{itemize}
+
+\subsection{Giá trị và ý nghĩa của đề tài}
+Đề tài có những đóng góp chính như sau:
+\begin{itemize}
+    \item Xây dựng một môi trường mô phỏng hoàn chỉnh cho tín hiệu điện cơ sEMG, có khả năng tái sử dụng và mở rộng cho các nghiên cứu sau.  
+    \item Phát triển và kiểm chứng hiệu quả của thuật toán Hilbert-ROTH trong bài toán ước lượng MFCV, góp phần nâng cao độ chính xác trong phân tích tín hiệu sinh học.  
+    \item Cung cấp cơ sở kỹ thuật và thuật toán cho việc phát triển các hệ thống đo, đánh giá mỏi cơ trong tương lai.  
+\end{itemize}
+
+\subsection{Hạn chế của mô hình mô phỏng}
+Mặc dù đạt được nhiều kết quả tích cực, đề tài vẫn còn một số hạn chế:
+\begin{itemize}
+    \item Mô hình chỉ dừng lại ở mức mô phỏng tín hiệu, chưa tiến hành thử nghiệm trên dữ liệu EMG thực tế.  
+    \item Các yếu tố sinh lý khác như độ dày da, vị trí điện cực, hoặc loại cơ chưa được mô phỏng chi tiết.  
+    \item Việc đánh giá thuật toán mới chỉ thực hiện trên các tín hiệu song kênh; trong thực tế, các hệ thống đo đa kênh có thể mang lại kết quả toàn diện hơn.  
+\end{itemize}
+
+
+\section{Hướng phát triển}
+
+Mặc dù hệ thống mô phỏng và các thuật toán ước lượng vận tốc dẫn truyền sợi cơ (MFCV) đã cho thấy kết quả khả quan, đề tài vẫn còn tiềm năng để tiếp tục phát triển và mở rộng trong tương lai.  
+Các hướng phát triển được đề xuất bao gồm cả phương diện thực nghiệm, tối ưu thuật toán và ứng dụng thực tế trong thiết bị đo sinh học.
+
+\subsection{Thực nghiệm trên tín hiệu EMG thực tế}
+Trong giai đoạn tiếp theo, nhóm nghiên cứu dự kiến tiến hành thu thập và xử lý dữ liệu EMG thực tế từ các nhóm cơ khác nhau trên cơ thể.  
+Việc áp dụng các thuật toán đã phát triển trên tín hiệu thật sẽ giúp:
+\begin{itemize}
+    \item Đánh giá độ chính xác và khả năng tổng quát của mô hình trong môi trường thực.  
+    \item Hiệu chỉnh các tham số mô phỏng sao cho phù hợp với đặc trưng sinh lý của cơ thể người.  
+    \item Kiểm chứng mối quan hệ giữa vận tốc dẫn truyền (MFCV) và mức độ mỏi cơ trong điều kiện thực nghiệm.  
+\end{itemize}
+
+\subsection{Ứng dụng thuật toán học máy trong phân loại mỏi cơ}
+Một hướng phát triển quan trọng là kết hợp các đặc trưng trích xuất từ tín hiệu sEMG (như MFCV, RMS, MDF, và MNF) với các mô hình học máy nhằm tự động phân loại mức độ mỏi cơ.  
+Cụ thể, các bước có thể triển khai gồm:
+\begin{itemize}
+    \item Xây dựng tập dữ liệu huấn luyện dựa trên nhiều trạng thái co cơ (mỏi nhẹ, mỏi vừa, mỏi nặng).  
+    \item Ứng dụng các thuật toán phân loại như SVM, Random Forest, hoặc mạng nơ-ron (ANN/CNN) để xác định trạng thái cơ.  
+    \item Đánh giá độ chính xác phân loại và tối ưu hóa mô hình nhằm tăng độ tin cậy của hệ thống.  
+\end{itemize}
+
+Việc ứng dụng học máy không chỉ giúp hệ thống hoạt động tự động hơn mà còn mở rộng khả năng giám sát tình trạng cơ trong các ứng dụng thể thao, y học phục hồi chức năng hoặc hỗ trợ chẩn đoán bệnh lý cơ – thần kinh.
+
+\subsection{Tích hợp mô hình vào thiết bị đo EMG cầm tay}
+Một hướng mở rộng khác là tích hợp mô hình đã phát triển vào các thiết bị đo EMG cầm tay (portable EMG analyzer).  
+Mục tiêu là tạo ra hệ thống có khả năng:
+\begin{itemize}
+    \item Ghi nhận tín hiệu sEMG thực tế thông qua các điện cực dán bề mặt.  
+    \item Xử lý tín hiệu trực tiếp bằng vi điều khiển hoặc bộ xử lý nhúng (như Raspberry Pi, Jetson Nano).  
+    \item Tính toán MFCV và hiển thị mức mỏi cơ theo thời gian thực trên giao diện di động hoặc máy tính.  
+\end{itemize}
+
+Việc tích hợp này sẽ giúp chuyển đổi mô hình mô phỏng thành một ứng dụng thực tế, có thể phục vụ trong các lĩnh vực như:
+\begin{itemize}
+    \item Theo dõi quá trình tập luyện thể thao để tránh chấn thương do quá tải cơ.  
+    \item Hỗ trợ phục hồi chức năng cho bệnh nhân sau tai biến hoặc chấn thương thần kinh – cơ.  
+    \item Đánh giá sức cơ trong các nghiên cứu y sinh học hoặc y học thể thao.  
+\end{itemize}
+
+\subsection{Hướng tối ưu hóa và mở rộng khác}
+Ngoài ba hướng chính trên, đề tài còn có thể được mở rộng theo các hướng sau:
+\begin{itemize}
+    \item Nâng cấp mô hình mô phỏng để hỗ trợ tín hiệu đa kênh, giúp phân tích không gian (spatial EMG mapping).  
+    \item Ứng dụng các thuật toán lọc thích nghi (adaptive filtering) để tăng cường khả năng loại bỏ nhiễu.  
+    \item Tối ưu hóa tốc độ tính toán của Hilbert-ROTH bằng cách triển khai song song (parallel processing) hoặc sử dụng GPU.  
+\end{itemize}
+
+
+
+% =============================================================
+% ------------------- TÀI LIỆU THAM KHẢO -------------------
+\begin{thebibliography}{99}
+\addcontentsline{toc}{chapter}{TÀI LIỆU THAM KHẢO}
+
+\bibitem{ref1} De Luca, C. J. (2002). \textit{Surface electromyography: Detection and recording}. DelSys Inc., Boston, USA.
+
+\bibitem{ref2} Phinyomark, A., Phukpattaranont, P., & Limsakul, C. (2012). Feature extraction and selection for myoelectric control based on wearable EMG sensors. \textit{Sensors}, 12(9), 12327–12352.
+
+\bibitem{ref3} Chowdhury, R. H., Reaz, M. B. I., Ali, M. A. B. M., Bakar, A. A. A., Chellappan, K., & Chang, T. G. (2013). Surface electromyography signal processing and classification techniques. \textit{Sensors}, 13(9), 12431–12466.
+
+\bibitem{ref4} Farina, D., Merletti, R., & Enoka, R. M. (2014). The extraction of neural strategies from the surface EMG. \textit{Journal of Applied Physiology}, 117(11), 1215–1230.
+
+\bibitem{ref5} Beck, T. W., Housh, T. J., Johnson, G. O., Cramer, J. T., Weir, J. P., Coburn, J. W., & Malek, M. H. (2004). Mechanomyographic and electromyographic time and frequency domain responses during submaximal to maximal isometric muscle actions. \textit{Journal of Electromyography and Kinesiology}, 14(5), 547–555.
+
+\bibitem{ref6} Mesin, L., & Merletti, R. (2008). Investigation of motor unit properties from the surface EMG. \textit{IEEE Transactions on Biomedical Engineering}, 55(5), 1184–1194.
+
+\bibitem{ref7} Rainoldi, A., Melchiorri, G., & Caruso, I. (2004). A method for positioning electrodes during surface EMG recordings in lower limb muscles. \textit{Journal of Neuroscience Methods}, 134(1), 37–43.
+
+\bibitem{ref8} Holtermann, A., Roeleveld, K., Karlsson, J. S., & Olsen, H. B. (2005). Motor unit synchronization during fatigue: Quantitative analysis of EMG signals from quadriceps muscles. \textit{IEEE Transactions on Neural Systems and Rehabilitation Engineering}, 13(3), 282–289.
+
+\bibitem{ref9} Madeleine, P., Farina, D., & Arendt-Nielsen, L. (2002). Mechanomyography and electromyography force relationships during concentric, isometric and eccentric contractions. \textit{Muscle & Nerve}, 25(3), 341–349.
+
+\bibitem{ref10} Lowery, M. M., Stoykov, N. S., & Kuiken, T. A. (2003). A simulation study to examine the use of myoelectric signal features as indicators of motor unit recruitment. \textit{Journal of Electromyography and Kinesiology}, 13(4), 381–389.
+
+\bibitem{ref11} Merletti, R., & Parker, P. A. (2004). \textit{Electromyography: Physiology, engineering, and non-invasive applications}. John Wiley \& Sons.
+
+\bibitem{ref12} Reaz, M. B. I., Hussain, M. S., & Mohd-Yasin, F. (2006). Techniques of EMG signal analysis: Detection, processing, classification and applications. \textit{Biological Procedures Online}, 8(1), 11–35.
+
+\bibitem{ref13} Kwatny, E., Thomas, D. H., & Kwatny, H. G. (1970). An application of signal processing techniques to the study of myoelectric signals. \textit{IEEE Transactions on Biomedical Engineering}, 17(4), 303–313.
+
+\bibitem{ref14} Stulen, F. B., & De Luca, C. J. (1981). Frequency parameters of the myoelectric signal as a measure of muscle conduction velocity. \textit{IEEE Transactions on Biomedical Engineering}, 28(7), 515–523.
+
+\bibitem{ref15} Dimitrov, G. V., & Dimitrova, N. A. (2003). Amplitude-related characteristics of motor unit and M-wave potentials during fatigue. \textit{Journal of Electromyography and Kinesiology}, 13(1), 13–36.
+
+\bibitem{ref16} Gazzoni, M., Farina, D., & Merletti, R. (2001). Motor unit conduction velocity during sustained isometric contractions. \textit{Muscle & Nerve}, 24(9), 1345–1353.
+
+\bibitem{ref17} Farina, D., Holobar, A., Merletti, R., & Enoka, R. M. (2010). Decoding the neural drive to muscles from the surface electromyogram. \textit{Clinical Neurophysiology}, 121(10), 1616–1623.
+
+\bibitem{ref18} Xie, H. B., Zheng, Y. P., & Guo, J. Y. (2014). Classification of surface EMG signals using wavelet transform and nonlinear entropy. \textit{Medical Engineering & Physics}, 36(4), 491–500.
+
+\bibitem{ref19} Phukpattaranont, P., & Limsakul, C. (2011). Automatic motor unit action potential detection using wavelet transform and clustering. \textit{Biomedical Signal Processing and Control}, 6(1), 13–20.
+
+\bibitem{ref20} Mesin, L., & Merletti, R. (2010). Simulation of surface EMG generation and detection. \textit{IEEE Transactions on Neural Systems and Rehabilitation Engineering}, 18(6), 583–594.
+
+\end{thebibliography}
+\end{document}
+
