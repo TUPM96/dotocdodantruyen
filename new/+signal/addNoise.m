@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: addNoise.m
+% CHUC NANG: Them nhieu trang Gaussian vao tin hieu theo SNR mong muon
+% MODULE: signal
+% ==============================================================================
+%
 function signal_noisy = addNoise(signal_clean, SNR_dB)
 % ADDNOISE Add Gaussian white noise to signal at specified SNR
 %

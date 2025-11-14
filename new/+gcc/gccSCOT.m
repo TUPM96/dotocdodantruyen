@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: gccSCOT.m
+% CHUC NANG: Uoc luong do tre bang SCOT (Smoothed Coherence Transform)
+% MODULE: gcc
+% ==============================================================================
+%
 function [delay, correlation] = gccSCOT(Pxy, Gx1x1, Gx2x2, N)
 % GCCSCOT Smoothed Coherence Transform (SCOT) GCC method
 %

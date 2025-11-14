@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: calculatePSD.m
+% CHUC NANG: Tinh mat do pho cong suat theo mo hinh Farina-Merletti
+% MODULE: signal
+% ==============================================================================
+%
 function PSD = calculatePSD(N, Fs)
 % CALCULATEPSD Calculate Farina-Merletti PSD model for sEMG signals
 %

@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: gccROTH.m
+% CHUC NANG: Uoc luong do tre bang bo xu ly Roth
+% MODULE: gcc
+% ==============================================================================
+%
 function [delay, correlation] = gccROTH(Pxy, Gx1x1, N)
 % GCCROTH Roth processor GCC method
 %

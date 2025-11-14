@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: main.m
+% CHUC NANG: Chuong trinh chinh uoc luong MFCV su dung cac phuong phap GCC
+% MODULE: main
+% ==============================================================================
+%
 %% CHUONG TRINH CHINH: UOC LUONG MFCV SU DUNG PHUONG PHAP GCC
 % TAI LIEU TIENG VIET KHONG DAU:
 % ================================
@@ -11,14 +17,16 @@
 % - Uoc luong MFCV bang cach do do tre tin hieu sEMG giua cac dien cuc
 % - Cong thuc: MFCV = Khoang_cach_dien_cuc / Do_tre_thoi_gian
 %
-% Cac phuong phap GCC duoc so sanh:
+% Cac phuong phap GCC duoc so sanh (6 phuong phap chinh):
 %   1. CC_time  - Tuong quan cheo mien thoi gian (co ban)
-%   2. GCC      - GCC co ban (mien tan so)
-%   3. PHAT     - Phase Transform (tay trang pho)
-%   4. ROTH     - Bo xu ly Roth (chuan hoa 1 kenh)
-%   5. SCOT     - Smoothed Coherence Transform (chuan hoa doi xung)
-%   6. ECKART   - Bo loc Eckart (toi uu SNR)
-%   7. HT       - Hannan-Thomson (Maximum Likelihood - toi uu nhat)
+%   2. PHAT     - Phase Transform (tay trang pho)
+%   3. ROTH     - Bo xu ly Roth (chuan hoa 1 kenh)
+%   4. SCOT     - Smoothed Coherence Transform (chuan hoa doi xung)
+%   5. ECKART   - Bo loc Eckart (toi uu SNR)
+%   6. HT       - Hannan-Thomson (Maximum Likelihood - toi uu nhat)
+%
+% Ghi chu: GCC co ban (gccBasic.m) khong duoc tinh vao danh sach vi no
+%          chi la phien ban mien tan so cua CC_time
 %
 % Quy trinh:
 % 1. Nap cau hinh
@@ -76,7 +84,7 @@ PSD = signal.calculatePSD(cfg.N, cfg.Fs);
 fprintf('[3/10] Initializing data structures...\n');
 fprintf('[3/10] Dang khoi tao cau truc du lieu...\n');
 
-n_methods = length(cfg.methods);  % So phuong phap (7)
+n_methods = length(cfg.methods);  % So phuong phap (6)
 n_SNR = length(cfg.SNR);          % So muc SNR (3)
 
 % Luu tru tat ca cac uoc luong do tre tu moi lan lap
@@ -138,29 +146,26 @@ for iSNR = 1:n_SNR
         [Gx1x1, Gx2x2, Gss, Gn1n1, Gn2n2] = preprocessing.computeTheoreticalSpectra(...
                                               PSD, s1, s2, cfg.SNR(iSNR));
 
-        %% Buoc 4.5: Ap dung 7 phuong phap GCC
+        %% Buoc 4.5: Ap dung 6 phuong phap GCC chinh
         % Giai thich: Moi phuong phap tra ve mot uoc luong do tre
 
         % Phuong phap 1: CC_time - Tuong quan cheo mien thoi gian
         delays(iMC, 1, iSNR) = gcc.ccTime(s1_noise, s2_noise, cfg.N);
 
-        % Phuong phap 2: GCC co ban - Tuong quan cheo mien tan so
-        delays(iMC, 2, iSNR) = gcc.gccBasic(Pxy, cfg.N);
+        % Phuong phap 2: PHAT - Tay trang pho
+        delays(iMC, 2, iSNR) = gcc.gccPHAT(Pxy, Gss, cfg.N);
 
-        % Phuong phap 3: PHAT - Tay trang pho
-        delays(iMC, 3, iSNR) = gcc.gccPHAT(Pxy, Gss, cfg.N);
+        % Phuong phap 3: ROTH - Chuan hoa theo pho kenh 1
+        delays(iMC, 3, iSNR) = gcc.gccROTH(Pxy, Gx1x1, cfg.N);
 
-        % Phuong phap 4: ROTH - Chuan hoa theo pho kenh 1
-        delays(iMC, 4, iSNR) = gcc.gccROTH(Pxy, Gx1x1, cfg.N);
+        % Phuong phap 4: SCOT - Chuan hoa doi xung
+        delays(iMC, 4, iSNR) = gcc.gccSCOT(Pxy, Gx1x1, Gx2x2, cfg.N);
 
-        % Phuong phap 5: SCOT - Chuan hoa doi xung
-        delays(iMC, 5, iSNR) = gcc.gccSCOT(Pxy, Gx1x1, Gx2x2, cfg.N);
+        % Phuong phap 5: ECKART - Bo loc toi uu SNR
+        delays(iMC, 5, iSNR) = gcc.gccECKART(Pxy, Gss, Gn1n1, Gn2n2, cfg.N);
 
-        % Phuong phap 6: ECKART - Bo loc toi uu SNR
-        delays(iMC, 6, iSNR) = gcc.gccECKART(Pxy, Gss, Gn1n1, Gn2n2, cfg.N);
-
-        % Phuong phap 7: HT - Maximum Likelihood (toi uu nhat)
-        delays(iMC, 7, iSNR) = gcc.gccHT(Pxy, Gss, Gn1n1, Gn2n2, cfg.N);
+        % Phuong phap 6: HT - Maximum Likelihood (toi uu nhat)
+        delays(iMC, 6, iSNR) = gcc.gccHT(Pxy, Gss, Gn1n1, Gn2n2, cfg.N);
     end
 end
 
