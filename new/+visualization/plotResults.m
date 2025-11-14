@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: plotResults.m
+% CHUC NANG: Tao cac bieu do tong hop ket qua so sanh cac phuong phap
+% MODULE: visualization
+% ==============================================================================
+%
 function plotResults(results, SNR_values, method_names, save_path)
 % PLOTRESULTS Create comprehensive results plots
 %

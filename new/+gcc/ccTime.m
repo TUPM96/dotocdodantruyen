@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: ccTime.m
+% CHUC NANG: Uoc luong do tre bang tuong quan cheo mien thoi gian
+% MODULE: gcc
+% ==============================================================================
+%
 function [delay, correlation] = ccTime(s1, s2, N)
 % CCTIME Time-domain cross-correlation method
 %

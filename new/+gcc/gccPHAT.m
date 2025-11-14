@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: gccPHAT.m
+% CHUC NANG: Uoc luong do tre bang phuong phap PHAT (Phase Transform)
+% MODULE: gcc
+% ==============================================================================
+%
 function [delay, correlation] = gccPHAT(Pxy, Gss, N)
 % GCCPHAT Phase Transform (PHAT) GCC method
 %

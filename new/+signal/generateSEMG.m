@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: generateSEMG.m
+% CHUC NANG: Tao tin hieu sEMG gia lap voi cac kenh co do tre khac nhau
+% MODULE: signal
+% ==============================================================================
+%
 function [Vec_Signal, T, b] = generateSEMG(Signal_Type, N, p, D, Fe, varargin)
 % GENERATESEMG Tao tin hieu sEMG gia lap voi do tre chi dinh
 %

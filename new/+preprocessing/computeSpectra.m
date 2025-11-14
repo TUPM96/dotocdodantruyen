@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: computeSpectra.m
+% CHUC NANG: Tinh mat do pho tu dong va cheo su dung phuong phap Welch
+% MODULE: preprocessing
+% ==============================================================================
+%
 function [Pxx, Pyy, Pxy] = computeSpectra(s1, s2, win, n_overlap, nfft, Fs)
 % COMPUTESPECTRA Compute auto and cross power spectral densities
 %

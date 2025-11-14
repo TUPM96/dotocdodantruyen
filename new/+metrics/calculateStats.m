@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: calculateStats.m
+% CHUC NANG: Tinh cac chi so thong ke danh gia hieu suat uoc luong
+% MODULE: metrics
+% ==============================================================================
+%
 function stats = calculateStats(delays, expected_delay)
 % CALCULATESTATS Calculate statistical performance metrics
 %

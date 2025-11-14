@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: findBestMethod.m
+% CHUC NANG: Tim phuong phap co RMSE thap nhat tai muc SNR cho truoc
+% MODULE: metrics
+% ==============================================================================
+%
 function [best_method, best_rmse] = findBestMethod(results, method_names, iSNR)
 % FINDBESTMETHOD Find method with lowest RMSE at given SNR
 %

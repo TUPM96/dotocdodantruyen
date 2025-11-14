@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: printResultsTable.m
+% CHUC NANG: In bang ket qua dinh dang dep de de doc
+% MODULE: metrics
+% ==============================================================================
+%
 function printResultsTable(results, SNR_values, method_names)
 % PRINTRESULTSTABLE Print formatted results table
 %

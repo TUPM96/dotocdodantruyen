@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: gccHT.m
+% CHUC NANG: Uoc luong do tre bang Hannan-Thomson (Maximum Likelihood)
+% MODULE: gcc
+% ==============================================================================
+%
 function [delay, correlation] = gccHT(Pxy, Gss, Gn1n1, Gn2n2, N)
 % GCCHT Hannan-Thomson (Maximum Likelihood) GCC method
 %

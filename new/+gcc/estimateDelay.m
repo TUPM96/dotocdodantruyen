@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: estimateDelay.m
+% CHUC NANG: Uoc luong do tre tu ham tuong quan bang noi suy Parabola
+% MODULE: gcc
+% ==============================================================================
+%
 function delay = estimateDelay(correlation, N, use_interpolation)
 % ESTIMATEDELAY Estimate time delay from correlation function
 %

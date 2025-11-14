@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: gccECKART.m
+% CHUC NANG: Uoc luong do tre bang bo loc Eckart
+% MODULE: gcc
+% ==============================================================================
+%
 function [delay, correlation] = gccECKART(Pxy, Gss, Gn1n1, Gn2n2, N)
 % GCCECKART Eckart filter GCC method
 %

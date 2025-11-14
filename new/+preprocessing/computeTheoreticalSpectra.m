@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: computeTheoreticalSpectra.m
+% CHUC NANG: Tinh cac pho ly thuyet cho cac phuong phap GCC
+% MODULE: preprocessing
+% ==============================================================================
+%
 function [Gx1x1, Gx2x2, Gss, Gn1n1, Gn2n2] = computeTheoreticalSpectra(PSD, s1, s2, SNR_dB)
 % COMPUTETHEORETICALSPECTRA Compute theoretical spectra for GCC methods
 %

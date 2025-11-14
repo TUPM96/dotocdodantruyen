@@ -1,5 +1,11 @@
+% ==============================================================================
+% TEN FILE: Delay_Modeling_Var.m
+% CHUC NANG: Tao do tre phan so su dung bo loc FIR
+% MODULE: utils
+% ==============================================================================
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                      *****  *   *  *****  ******  *****  *****                    %                                     
+%                      *****  *   *  *****  ******  *****  *****                    %
 %                        *    *   *  *      *         *    *                        %
 %                        *    *****  ***    ******    *    *****                    %
 %                        *    *   *  *           *    *        *                    %
@@ -7,7 +13,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                                   %
 % Project name                  : THESIS                                            %
-% Project part                  : Conducton Velocity estimation                     % 
+% Project part                  : Conducton Velocity estimation                     %
 %                                                                                   %
 % File                          : Delay_Modeling.m                                  %
 % File version                  : 1.00                                              %
@@ -17,7 +23,7 @@
 % Date of creation              : 11 September 2006                                 %
 % Comments                      :                                                   %
 %                                                                                   %
-% Date of mofification(s)       : 20 September 2006                                 % 
+% Date of mofification(s)       : 20 September 2006                                 %
 % Reason of the modification(s) : Add of comments.                                  %
 %                                                                                   %
 %                                                                                   %

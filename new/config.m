@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: config.m
+% CHUC NANG: Cau hinh tap trung cho mo phong uoc luong MFCV su dung GCC
+% MODULE: config
+% ==============================================================================
+%
 function cfg = config()
 % CONFIG Configuration parameters for GCC simulation
 %
@@ -65,20 +71,20 @@ cfg.delay_expected = cfg.DeltaE * cfg.Fs / cfg.CV_expected;
 % - So mau tre = 0.00125 * 2048 = 2.56 mau
 
 %% BUOC 6: Danh sach cac phuong phap GCC can danh gia
-% Giai thich: 7 phuong phap pho bien nhat, tu co ban den phuc tap
+% Giai thich: 6 phuong phap chinh, tu co ban den phuc tap
 cfg.methods = {
     'CC_time'   % 1. Tuong quan cheo mien thoi gian (co ban nhat)
-    'GCC'       % 2. GCC co ban (tuong duong CC_time, tinh trong mien tan so)
-    'PHAT'      % 3. Phase Transform - Tay trang pho, tot voi moi truong phan xa
-    'ROTH'      % 4. Bo xu ly Roth - Chuan hoa theo pho kenh 1
-    'SCOT'      % 5. Smoothed Coherence Transform - Chuan hoa doi xung ca 2 kenh
-    'ECKART'    % 6. Bo loc Eckart - Toi uu SNR, can biet thong ke tin hieu va nhieu
-    'HT'        % 7. Hannan-Thomson (ML) - Toi uu nhat theo ly thuyet
+    'PHAT'      % 2. Phase Transform - Tay trang pho, tot voi moi truong phan xa
+    'ROTH'      % 3. Bo xu ly Roth - Chuan hoa theo pho kenh 1
+    'SCOT'      % 4. Smoothed Coherence Transform - Chuan hoa doi xung ca 2 kenh
+    'ECKART'    % 5. Bo loc Eckart - Toi uu SNR, can biet thong ke tin hieu va nhieu
+    'HT'        % 6. Hannan-Thomson (ML) - Toi uu nhat theo ly thuyet
 };
 % Ghi chu:
-% - CC_time, GCC: Khong can thong tin truoc, don gian
+% - GCC co ban (gccBasic.m) KHONG PHAI la phuong phap rieng, chi la CC_time trong mien tan so
+% - CC_time: Khong can thong tin truoc, don gian
 % - PHAT, ROTH, SCOT: Can pho tin hieu, tot hon voi nhieu
-% - ECKART, HT: Can biet chính xac pho va thong ke nhieu, toi uu nhat
+% - ECKART, HT: Can biet chinh xac pho va thong ke nhieu, toi uu nhat
 
 %% BUOC 7: Cau hinh dau ra
 % Giai thich: Cac tuy chon luu ket qua va hien thi

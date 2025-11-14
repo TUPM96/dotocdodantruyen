@@ -1,3 +1,9 @@
+% ==============================================================================
+% TEN FILE: plotRMSEComparison.m
+% CHUC NANG: Tao bieu do cot so sanh RMSE giua cac phuong phap
+% MODULE: visualization
+% ==============================================================================
+%
 function plotRMSEComparison(results, SNR_values, method_names, save_path)
 % PLOTRMSECOMPARISON Create bar chart comparing RMSE across methods
 %

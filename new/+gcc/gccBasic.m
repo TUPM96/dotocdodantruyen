@@ -1,5 +1,17 @@
+% ==============================================================================
+% TEN FILE: gccBasic.m
+% CHUC NANG: GCC co ban (tuong duong CC_time trong mien tan so)
+% MODULE: gcc
+% ==============================================================================
+%
 function [delay, correlation] = gccBasic(Pxy, N)
 % GCCBASIC Basic GCC method (frequency domain cross-correlation)
+%
+% Ghi chu quan trong:
+% - GCC co ban KHONG PHAI la mot phuong phap rieng biet
+% - No chi la phien ban mien tan so cua CC_time
+% - Ket qua tuong duong voi CC_time
+% - Chi dung de minh hoa, khong tinh vao 6 phuong phap chinh
 %
 % TAI LIEU TIENG VIET KHONG DAU:
 % ================================
