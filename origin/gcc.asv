@@ -1,7 +1,7 @@
 close all; clear all;
 load Parameter_Script_cohF; delai_attendu=[4.9]; CV_attendu=5.10^-3/(4.9/2048);
-Nm=100; % N MOtecarlohang
-SNR=[0 10 20];%cot
+Nm=100; % N MOtecarlo
+SNR=[0 10 20];
 nfft=N;
 x=1:7;
 D=zeros(Nm,length(SNR));
@@ -550,7 +550,7 @@ figure;
  set(gca,'XTickLabel',['0 ';'10';'20']);
  ylabel('Ecart-type en échantillon');
  xlabel('RSB en dB');
- legend('CC')
+ title(' Méthode : "CC" ')
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  figure;
  bar(ecart_type_Eckart, 'DisplayName', 'ecart_type_Eckart', 'YDataSource', 'ecart_type_Eckart'); figure(gcf)
