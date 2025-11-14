@@ -342,7 +342,7 @@ title('Phuong phap: "SCOT"');
 
 % EQM (MSE): PHAT
 figure; bar(EQM_phat, 'DisplayName', 'EQM_phat'); figure(gcf);
-set(gca,'XTick',1:length(SNR)), set(gca,'XTickLabel':['0 ';'10';'20']);
+set(gca,'XTick',1:length(SNR)), set(gca,'XTickLabel',['0 ';'10';'20']);
 ylabel('EQM (echantillon^2)'); xlabel('RSB (dB)');
 title('Phuong phap: "PHAT"');
 
