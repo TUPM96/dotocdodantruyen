@@ -4,18 +4,13 @@
 % MODULE: main
 % ==============================================================================
 %
-%% CHUONG TRINH CHINH: UOC LUONG MFCV SU DUNG PHUONG PHAP GCC
-% TAI LIEU TIENG VIET KHONG DAU:
-% ================================
-% Muc dich: Uoc luong toc do dan truyen soi co bap (MFCV - Muscle Fiber
-%           Conduction Velocity) su dung cac phuong phap tuong quan cheo
-%           tong quat (GCC - Generalized Cross-Correlation)
+% Mo ta: Chuong trinh chinh uoc luong toc do dan truyen soi co bap (MFCV)
+%        su dung cac phuong phap tuong quan cheo tong quat (GCC)
 %
-% Giai thich:
-% - MFCV la toc do truyen xung dien tren soi co, thong so quan trong danh gia
-%   tinh trang co bap va chuẩn doan benh ly than kinh-co
-% - Uoc luong MFCV bang cach do do tre tin hieu sEMG giua cac dien cuc
-% - Cong thuc: MFCV = Khoang_cach_dien_cuc / Do_tre_thoi_gian
+% MFCV la toc do truyen xung dien tren soi co, thong so quan trong danh gia
+% tinh trang co bap va chan doan benh ly than kinh-co
+% Uoc luong MFCV bang cach do do tre tin hieu sEMG giua cac dien cuc
+% Cong thuc: MFCV = Khoang_cach_dien_cuc / Do_tre_thoi_gian
 %
 % Cac phuong phap GCC duoc so sanh (6 phuong phap chinh):
 %   1. CC_time  - Tuong quan cheo mien thoi gian (co ban)
@@ -24,9 +19,6 @@
 %   4. SCOT     - Smoothed Coherence Transform (chuan hoa doi xung)
 %   5. ECKART   - Bo loc Eckart (toi uu SNR)
 %   6. HT       - Hannan-Thomson (Maximum Likelihood - toi uu nhat)
-%
-% Ghi chu: GCC co ban (gccBasic.m) khong duoc tinh vao danh sach vi no
-%          chi la phien ban mien tan so cua CC_time
 %
 % Quy trinh:
 % 1. Nap cau hinh
@@ -40,19 +32,12 @@
 % 9. Luu ket qua
 % 10. Ket thuc
 %
-% MAIN SCRIPT FOR GCC-BASED MFCV ESTIMATION
-% Muscle Fiber Conduction Velocity (MFCV) estimation using
-% Generalized Cross-Correlation (GCC) methods
 
-clear; close all; clc;  % Xoa bien, dong cua so, xoa man hinh
+clear; close all; clc;
 
-%% ========================================================================
-%  PHAN 1: NAP CAU HINH
-%  SECTION 1: LOAD CONFIGURATION
-%  ========================================================================
-% Giai thich: Nap tat ca tham so mo phong tu file config.m
+% PHAN 1: NAP CAU HINH
+% Nap tat ca tham so mo phong tu file config.m
 % Bao gom: so lan lap Monte Carlo, SNR, tan so lay mau, tham so co bap, v.v.
-
 fprintf('\n========================================\n');
 fprintf('  GCC-BASED MFCV ESTIMATION SIMULATION\n');
 fprintf('  MO PHONG UOC LUONG MFCV BANG GCC\n');
@@ -62,120 +47,101 @@ fprintf('[1/10] Loading configuration...\n');
 fprintf('[1/10] Dang nap cau hinh...\n');
 cfg = config();
 
-%% ========================================================================
-%  PHAN 2: TINH PSD LY THUYET
-%  SECTION 2: CALCULATE THEORETICAL PSD
-%  ========================================================================
-% Giai thich: Tinh mat do pho cong suat (PSD) ly thuyet theo mo hinh
-% Farina-Merletti - mo hinh chuan cho tin hieu sEMG
-
+% PHAN 2: TINH PSD LY THUYET
+% Tinh mat do pho cong suat (PSD) ly thuyet theo mo hinh Farina-Merletti
+% Mo hinh chuan cho tin hieu sEMG
 fprintf('[2/10] Calculating Farina-Merletti PSD...\n');
 fprintf('[2/10] Dang tinh PSD Farina-Merletti...\n');
 PSD = signal.calculatePSD(cfg.N, cfg.Fs);
 
-%% ========================================================================
-%  PHAN 3: KHOI TAO CAU TRUC DU LIEU
-%  SECTION 3: INITIALIZE DATA STRUCTURES
-%  ========================================================================
-% Giai thich: Tao cac bien de luu tru ket qua mo phong
-% - delays: Luu tat ca uoc luong do tre tu moi lan lap Monte Carlo
-% - results: Luu cac chi so thong ke (mean, bias, RMSE, ...) cho moi phuong phap
-
+% PHAN 3: KHOI TAO CAU TRUC DU LIEU
+% Tao cac bien de luu tru ket qua mo phong
+% delays: Luu tat ca uoc luong do tre tu moi lan lap Monte Carlo
+% results: Luu cac chi so thong ke (mean, bias, RMSE, ...) cho moi phuong phap
 fprintf('[3/10] Initializing data structures...\n');
 fprintf('[3/10] Dang khoi tao cau truc du lieu...\n');
 
-n_methods = length(cfg.methods);  % So phuong phap (6)
-n_SNR = length(cfg.SNR);          % So muc SNR (3)
+n_methods = length(cfg.methods);
+n_SNR = length(cfg.SNR);
 
 % Luu tru tat ca cac uoc luong do tre tu moi lan lap
 % Kich thuoc: (Nm x n_methods x n_SNR)
-% - Nm: So lan lap Monte Carlo
-% - n_methods: So phuong phap
-% - n_SNR: So muc SNR
 delays = zeros(cfg.Nm, n_methods, n_SNR);
 
 % Luu tru cac chi so thong ke da tinh toan
 % Moi o chua mot cau truc voi cac truong: mean, bias, variance, std, mse, rmse
 results = cell(n_methods, n_SNR);
 
-%% ========================================================================
-%  PHAN 4: MO PHONG MONTE CARLO
-%  SECTION 4: MONTE CARLO SIMULATION
-%  ========================================================================
-% Giai thich: Vong lap chinh cua mo phong
-% - Lap lai Nm lan voi nhieu ngau nhien khac nhau
-% - Moi lan: tao tin hieu, them nhieu, tinh pho, ap dung cac phuong phap GCC
-% - Muc dich: Danh gia hieu suat thong ke cua cac phuong phap
-
+% PHAN 4: MO PHONG MONTE CARLO
+% Vong lap chinh cua mo phong
+% Lap lai Nm lan voi nhieu ngau nhien khac nhau
+% Moi lan: tao tin hieu, them nhieu, tinh pho, ap dung cac phuong phap GCC
+% Muc dich: Danh gia hieu suat thong ke cua cac phuong phap
 fprintf('[4/10] Running Monte Carlo simulation (%d iterations)...\n', cfg.Nm);
 fprintf('[4/10] Dang chay mo phong Monte Carlo (%d lan lap)...\n', cfg.Nm);
 
 % Tao ham cua so Hanning cho phuong phap Welch
 win = hanning(cfg.h_Length);
-n_overlap = cfg.h_Length / 2;  % 50% chong chap
+n_overlap = cfg.h_Length / 2;
 
 % Vong lap mo phong chinh
 for iSNR = 1:n_SNR
     fprintf('  SNR = %d dB\n', cfg.SNR(iSNR));
-
+    
     for iMC = 1:cfg.Nm
         % In tien trinh moi 20 lan lap
         if mod(iMC, 20) == 0
             fprintf('    Iteration %d/%d (Lan lap %d/%d)\n', iMC, cfg.Nm, iMC, cfg.Nm);
         end
-
-        %% Buoc 4.1: Tao tin hieu sEMG gia lap
-        % Giai thich: Tao 4 kenh tin hieu voi do tre tang dan
+        
+        % Buoc 4.1: Tao tin hieu sEMG gia lap
+        % Tao 4 kenh tin hieu voi do tre tang dan
         [Vec_Signal, ~, ~] = signal.generateSEMG('simu_semg', cfg.N, cfg.p, ...
                                                   cfg.delay_expected, cfg.Fs);
-        s1 = Vec_Signal(:, 1);  % Kenh 1 (tham chieu)
-        s2 = Vec_Signal(:, 2);  % Kenh 2 (co do tre)
-
-        %% Buoc 4.2: Them nhieu vao tin hieu
-        % Giai thich: Them nhieu trang Gaussian de dat SNR mong muon
+        s1 = Vec_Signal(:, 1);
+        s2 = Vec_Signal(:, 2);
+        
+        % Buoc 4.2: Them nhieu vao tin hieu
+        % Them nhieu trang Gaussian de dat SNR mong muon
         s1_noise = signal.addNoise(s1, cfg.SNR(iSNR));
         s2_noise = signal.addNoise(s2, cfg.SNR(iSNR));
-
-        %% Buoc 4.3: Tinh cac pho (PSD)
-        % Giai thich: Tinh pho tu dong va pho cheo su dung phuong phap Welch
+        
+        % Buoc 4.3: Tinh cac pho (PSD)
+        % Tinh pho tu dong va pho cheo su dung phuong phap Welch
         [Pxx, Pyy, Pxy] = preprocessing.computeSpectra(s1_noise, s2_noise, ...
                                                        win, n_overlap, cfg.nfft, cfg.Fs);
-
-        %% Buoc 4.4: Tinh pho ly thuyet
-        % Giai thich: Can cho cac phuong phap ECKART va HT
+        
+        % Buoc 4.4: Tinh pho ly thuyet
+        % Can cho cac phuong phap ECKART va HT
         [Gx1x1, Gx2x2, Gss, Gn1n1, Gn2n2] = preprocessing.computeTheoreticalSpectra(...
                                               PSD, s1, s2, cfg.SNR(iSNR));
-
-        %% Buoc 4.5: Ap dung 6 phuong phap GCC chinh
-        % Giai thich: Moi phuong phap tra ve mot uoc luong do tre
-
+        
+        % Buoc 4.5: Ap dung 6 phuong phap GCC chinh
+        % Moi phuong phap tra ve mot uoc luong do tre
+        
         % Phuong phap 1: CC_time - Tuong quan cheo mien thoi gian
         delays(iMC, 1, iSNR) = gcc.ccTime(s1_noise, s2_noise, cfg.N);
-
+        
         % Phuong phap 2: PHAT - Tay trang pho
         delays(iMC, 2, iSNR) = gcc.gccPHAT(Pxy, Gss, cfg.N);
-
+        
         % Phuong phap 3: ROTH - Chuan hoa theo pho kenh 1
         delays(iMC, 3, iSNR) = gcc.gccROTH(Pxy, Gx1x1, cfg.N);
-
+        
         % Phuong phap 4: SCOT - Chuan hoa doi xung
         delays(iMC, 4, iSNR) = gcc.gccSCOT(Pxy, Gx1x1, Gx2x2, cfg.N);
-
+        
         % Phuong phap 5: ECKART - Bo loc toi uu SNR
         delays(iMC, 5, iSNR) = gcc.gccECKART(Pxy, Gss, Gn1n1, Gn2n2, cfg.N);
-
+        
         % Phuong phap 6: HT - Maximum Likelihood (toi uu nhat)
         delays(iMC, 6, iSNR) = gcc.gccHT(Pxy, Gss, Gn1n1, Gn2n2, cfg.N);
     end
 end
 
-%% ========================================================================
-%  PHAN 5: TINH CAC CHI SO THONG KE
-%  SECTION 5: CALCULATE STATISTICS
-%  ========================================================================
-% Giai thich: Tinh cac chi so thong ke tu ket qua mo phong Monte Carlo
+% PHAN 5: TINH CAC CHI SO THONG KE
+% Tinh cac chi so thong ke tu ket qua mo phong Monte Carlo
 % Bao gom: mean, bias, variance, std, MSE, RMSE cho moi phuong phap o moi SNR
-
 fprintf('[5/10] Calculating statistics...\n');
 fprintf('[5/10] Dang tinh cac chi so thong ke...\n');
 
@@ -188,22 +154,14 @@ for iSNR = 1:n_SNR
     end
 end
 
-%% ========================================================================
-%  PHAN 6: IN KET QUA
-%  SECTION 6: PRINT RESULTS
-%  ========================================================================
-% Giai thich: In bang ket qua dinh dang dep ra man hinh
-
+% PHAN 6: IN KET QUA
+% In bang ket qua dinh dang dep ra man hinh
 fprintf('[6/10] Printing results...\n');
 fprintf('[6/10] Dang in ket qua...\n');
 metrics.printResultsTable(results, cfg.SNR, cfg.methods);
 
-%% ========================================================================
-%  PHAN 7: TIM PHUONG PHAP TOT NHAT
-%  SECTION 7: FIND BEST METHODS
-%  ========================================================================
-% Giai thich: Tim phuong phap co RMSE thap nhat tai moi muc SNR
-
+% PHAN 7: TIM PHUONG PHAP TOT NHAT
+% Tim phuong phap co RMSE thap nhat tai moi muc SNR
 fprintf('[7/10] Identifying best methods...\n');
 fprintf('[7/10] Dang xac dinh phuong phap tot nhat...\n\n');
 fprintf('Best methods at each SNR level:\n');
@@ -217,29 +175,21 @@ for iSNR = 1:n_SNR
 end
 fprintf('\n');
 
-%% ========================================================================
-%  PHAN 8: TAO BIEU DO TRUC QUAN
-%  SECTION 8: CREATE VISUALIZATIONS
-%  ========================================================================
-% Giai thich: Tao cac bieu do de so sanh truc quan hieu suat cac phuong phap
-
+% PHAN 8: TAO BIEU DO TRUC QUAN
+% Tao cac bieu do de so sanh truc quan hieu suat cac phuong phap
 fprintf('[8/10] Creating visualizations...\n');
 fprintf('[8/10] Dang tao bieu do...\n');
 
 if cfg.show_plots
     % Bieu do tong hop: RMSE, Bias, Variance, Std vs SNR
     visualization.plotResults(results, cfg.SNR, cfg.methods, cfg.results_dir);
-
+    
     % Bieu do cot so sanh RMSE
     visualization.plotRMSEComparison(results, cfg.SNR, cfg.methods, cfg.results_dir);
 end
 
-%% ========================================================================
-%  PHAN 9: LUU KET QUA
-%  SECTION 9: SAVE RESULTS
-%  ========================================================================
-% Giai thich: Luu tat ca ket qua vao file .mat de su dung sau nay
-
+% PHAN 9: LUU KET QUA
+% Luu tat ca ket qua vao file .mat de su dung sau nay
 fprintf('[9/10] Saving results...\n');
 fprintf('[9/10] Dang luu ket qua...\n');
 
@@ -248,21 +198,17 @@ if cfg.save_results
     if ~exist(cfg.results_dir, 'dir')
         mkdir(cfg.results_dir);
     end
-
+    
     % Luu workspace vao file .mat
     save(fullfile(cfg.results_dir, 'gcc_simulation_results.mat'), ...
          'results', 'delays', 'cfg', 'PSD');
-
+    
     fprintf('  Results saved to: %s/gcc_simulation_results.mat\n', cfg.results_dir);
     fprintf('  Ket qua da luu vao: %s/gcc_simulation_results.mat\n', cfg.results_dir);
 end
 
-%% ========================================================================
-%  PHAN 10: KET THUC
-%  SECTION 10: COMPLETION
-%  ========================================================================
-% Giai thich: In thong bao ket thuc va tong ket mo phong
-
+% PHAN 10: KET THUC
+% In thong bao ket thuc va tong ket mo phong
 fprintf('[10/10] Simulation complete!\n');
 fprintf('[10/10] Mo phong hoan thanh!\n\n');
 fprintf('========================================\n');
