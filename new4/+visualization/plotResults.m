@@ -135,79 +135,56 @@ xlabel('RSB en dB');
 title('Methode : "PHAT"');
 
 % ============================================================================
-% PHAN 2: BIEU DO SO SANH RMSE
+% PHAN 2: BIEU DO SO SANH TONG HOP - LAY KET QUA TU CAC CHART CU
 % ============================================================================
+% Tao 1 chart lon so sanh tat ca 6 phuong phap
+% Su dung du lieu tu cac chart cu (ecart_type va EQM)
 
-% Bieu do so sanh RMSE - Bar chart tai moi muc SNR
-for ns = 1:length(SNR)
-    figure;
-    x = [1:6];
-    z = [EQM(ns), EQM_Roth(ns), EQM_scot(ns), EQM_Eckart(ns), EQM_phat(ns), EQM_ml(ns)];
-    bar(x, z);
-    set(gca, 'XTick', 1:6);
-    set(gca, 'XTickLabel', {'CC_time'; 'ROTH'; 'SCOT'; 'ECKART'; 'PHAT'; 'HT'});
-    ylabel('RMSE (echantillon)');
-    xlabel('Phuong phap');
-    title(sprintf('So sanh RMSE cua cac phuong phap tai SNR = %d dB', SNR(ns)));
-    grid on;
-end
+% Bieu do 1: So sanh Do lech chuan (ecart_type) cua 6 phuong phap
+figure;
+% Tao ma tran du lieu: hang = phuong phap, cot = SNR
+ecart_type_matrix = [ecart_type'; ecart_type_Roth'; ecart_type_scot'; ...
+                     ecart_type_Eckart'; ecart_type_phat'; ecart_type_ml'];
+% Tao grouped bar chart
+bar(ecart_type_matrix');
+set(gca, 'XTickLabel', arrayfun(@(s) sprintf('%d dB', s), SNR, 'UniformOutput', false));
+xlabel('SNR (dB)', 'FontWeight', 'bold', 'FontSize', 12);
+ylabel('Do lech chuan (echantillon)', 'FontWeight', 'bold', 'FontSize', 12);
+title('So sanh Do lech chuan cua 6 phuong phap theo SNR', 'FontWeight', 'bold', 'FontSize', 14);
+legend('CC_time', 'ROTH', 'SCOT', 'ECKART', 'PHAT', 'HT', 'Location', 'best', 'FontSize', 10);
+grid on;
+set(gcf, 'Position', [100, 100, 800, 600]);  % Kich thuoc lon hon
 
-% Bieu do so sanh RMSE - Line plot theo SNR
+% Bieu do 2: So sanh RMSE (EQM) cua 6 phuong phap
+figure;
+% Tao ma tran du lieu: hang = phuong phap, cot = SNR
+EQM_matrix = [EQM'; EQM_Roth'; EQM_scot'; EQM_Eckart'; EQM_phat'; EQM_ml'];
+% Tao grouped bar chart
+bar(EQM_matrix');
+set(gca, 'XTickLabel', arrayfun(@(s) sprintf('%d dB', s), SNR, 'UniformOutput', false));
+xlabel('SNR (dB)', 'FontWeight', 'bold', 'FontSize', 12);
+ylabel('RMSE (echantillon)', 'FontWeight', 'bold', 'FontSize', 12);
+title('So sanh RMSE cua 6 phuong phap theo SNR', 'FontWeight', 'bold', 'FontSize', 14);
+legend('CC_time', 'ROTH', 'SCOT', 'ECKART', 'PHAT', 'HT', 'Location', 'best', 'FontSize', 10);
+grid on;
+set(gcf, 'Position', [100, 100, 800, 600]);  % Kich thuoc lon hon
+
+% Bieu do 3: So sanh RMSE - Line plot (duong cong)
 figure;
 hold on;
-plot(SNR, EQM, '-o', 'LineWidth', 2, 'DisplayName', 'CC_time');
-plot(SNR, EQM_Roth, '-o', 'LineWidth', 2, 'DisplayName', 'ROTH');
-plot(SNR, EQM_scot, '-o', 'LineWidth', 2, 'DisplayName', 'SCOT');
-plot(SNR, EQM_phat, '-o', 'LineWidth', 2, 'DisplayName', 'PHAT');
-plot(SNR, EQM_Eckart, '-o', 'LineWidth', 2, 'DisplayName', 'ECKART');
-plot(SNR, EQM_ml, '-o', 'LineWidth', 2, 'DisplayName', 'HT');
+plot(SNR, EQM, '-o', 'LineWidth', 2.5, 'MarkerSize', 8, 'DisplayName', 'CC_time');
+plot(SNR, EQM_Roth, '-s', 'LineWidth', 2.5, 'MarkerSize', 8, 'DisplayName', 'ROTH');
+plot(SNR, EQM_scot, '-^', 'LineWidth', 2.5, 'MarkerSize', 8, 'DisplayName', 'SCOT');
+plot(SNR, EQM_phat, '-d', 'LineWidth', 2.5, 'MarkerSize', 8, 'DisplayName', 'PHAT');
+plot(SNR, EQM_Eckart, '-v', 'LineWidth', 2.5, 'MarkerSize', 8, 'DisplayName', 'ECKART');
+plot(SNR, EQM_ml, '-*', 'LineWidth', 2.5, 'MarkerSize', 8, 'DisplayName', 'HT');
 hold off;
-xlabel('SNR (dB)', 'FontWeight', 'bold');
-ylabel('RMSE (echantillon)', 'FontWeight', 'bold');
-title('So sanh RMSE cua cac phuong phap theo SNR', 'FontWeight', 'bold');
-legend('Location', 'best');
+xlabel('SNR (dB)', 'FontWeight', 'bold', 'FontSize', 12);
+ylabel('RMSE (echantillon)', 'FontWeight', 'bold', 'FontSize', 12);
+title('So sanh RMSE cua 6 phuong phap theo SNR (Duong cong)', 'FontWeight', 'bold', 'FontSize', 14);
+legend('Location', 'best', 'FontSize', 10);
 grid on;
-
-% Bieu do so sanh RMSE tong hop - Bar chart
-figure;
-x = 1:6;
-z_all = [EQM(end), EQM_Roth(end), EQM_scot(end), EQM_Eckart(end), EQM_phat(end), EQM_ml(end)];
-bar(x, z_all, 'FaceColor', [0.2 0.6 0.8]);
-set(gca, 'XTick', 1:6);
-set(gca, 'XTickLabel', {'CC_time'; 'ROTH'; 'SCOT'; 'ECKART'; 'PHAT'; 'HT'});
-ylabel('RMSE (echantillon)', 'FontWeight', 'bold');
-xlabel('Phuong phap', 'FontWeight', 'bold');
-title('So sanh RMSE tong hop cua cac phuong phap tai SNR = 20 dB', 'FontWeight', 'bold');
-grid on;
-
-% Bieu do so sanh RMSE - Bar chart 3D
-figure;
-RMSE_matrix = [EQM'; EQM_Roth'; EQM_scot'; EQM_Eckart'; EQM_phat'; EQM_ml'];
-bar3(RMSE_matrix);
-set(gca, 'XTickLabel', {'0 dB'; '10 dB'; '20 dB'});
-set(gca, 'YTickLabel', {'CC_time'; 'ROTH'; 'SCOT'; 'ECKART'; 'PHAT'; 'HT'});
-xlabel('SNR (dB)', 'FontWeight', 'bold');
-ylabel('Phuong phap', 'FontWeight', 'bold');
-zlabel('RMSE (echantillon)', 'FontWeight', 'bold');
-title('So sanh RMSE 3D cua cac phuong phap theo SNR', 'FontWeight', 'bold');
-grid on;
-
-% Bieu do so sanh RMSE - Grouped bar chart
-figure;
-x = 1:length(SNR);
-y1 = EQM';
-y2 = EQM_Roth';
-y3 = EQM_scot';
-y4 = EQM_Eckart';
-y5 = EQM_phat';
-y6 = EQM_ml';
-bar([y1; y2; y3; y4; y5; y6]');
-set(gca, 'XTickLabel', {'0 dB'; '10 dB'; '20 dB'});
-xlabel('SNR (dB)', 'FontWeight', 'bold');
-ylabel('RMSE (echantillon)', 'FontWeight', 'bold');
-title('So sanh RMSE cua cac phuong phap theo SNR (Grouped Bar)', 'FontWeight', 'bold');
-legend('CC_time', 'ROTH', 'SCOT', 'ECKART', 'PHAT', 'HT', 'Location', 'best');
-grid on;
+set(gcf, 'Position', [100, 100, 800, 600]);  % Kich thuoc lon hon
 
 end
 
