@@ -155,7 +155,7 @@ legend('CC_time', 'ROTH', 'SCOT', 'ECKART', 'PHAT', 'HT', 'Location', 'best', 'F
 grid on;
 set(gcf, 'Position', [100, 100, 800, 600]);  % Kich thuoc lon hon
 
-% Bieu do 2: So sanh RMSE (EQM) cua 6 phuong phap
+% Bieu do 2: So sanh EQM (RMSE) cua 6 phuong phap - Grouped bar chart
 figure;
 % Tao ma tran du lieu: hang = phuong phap, cot = SNR
 EQM_matrix = [EQM'; EQM_Roth'; EQM_scot'; EQM_Eckart'; EQM_phat'; EQM_ml'];
@@ -163,28 +163,11 @@ EQM_matrix = [EQM'; EQM_Roth'; EQM_scot'; EQM_Eckart'; EQM_phat'; EQM_ml'];
 bar(EQM_matrix');
 set(gca, 'XTickLabel', arrayfun(@(s) sprintf('%d dB', s), SNR, 'UniformOutput', false));
 xlabel('SNR (dB)', 'FontWeight', 'bold', 'FontSize', 12);
-ylabel('RMSE (echantillon)', 'FontWeight', 'bold', 'FontSize', 12);
-title('So sanh RMSE cua 6 phuong phap theo SNR', 'FontWeight', 'bold', 'FontSize', 14);
+ylabel('EQM (RMSE) (echantillon)', 'FontWeight', 'bold', 'FontSize', 12);
+title('So sanh EQM cua 6 phuong phap theo SNR', 'FontWeight', 'bold', 'FontSize', 14);
 legend('CC_time', 'ROTH', 'SCOT', 'ECKART', 'PHAT', 'HT', 'Location', 'best', 'FontSize', 10);
 grid on;
-set(gcf, 'Position', [100, 100, 800, 600]);  % Kich thuoc lon hon
-
-% Bieu do 3: So sanh RMSE - Line plot (duong cong)
-figure;
-hold on;
-plot(SNR, EQM, '-o', 'LineWidth', 2.5, 'MarkerSize', 8, 'DisplayName', 'CC_time');
-plot(SNR, EQM_Roth, '-s', 'LineWidth', 2.5, 'MarkerSize', 8, 'DisplayName', 'ROTH');
-plot(SNR, EQM_scot, '-^', 'LineWidth', 2.5, 'MarkerSize', 8, 'DisplayName', 'SCOT');
-plot(SNR, EQM_phat, '-d', 'LineWidth', 2.5, 'MarkerSize', 8, 'DisplayName', 'PHAT');
-plot(SNR, EQM_Eckart, '-v', 'LineWidth', 2.5, 'MarkerSize', 8, 'DisplayName', 'ECKART');
-plot(SNR, EQM_ml, '-*', 'LineWidth', 2.5, 'MarkerSize', 8, 'DisplayName', 'HT');
-hold off;
-xlabel('SNR (dB)', 'FontWeight', 'bold', 'FontSize', 12);
-ylabel('RMSE (echantillon)', 'FontWeight', 'bold', 'FontSize', 12);
-title('So sanh RMSE cua 6 phuong phap theo SNR (Duong cong)', 'FontWeight', 'bold', 'FontSize', 14);
-legend('Location', 'best', 'FontSize', 10);
-grid on;
-set(gcf, 'Position', [100, 100, 800, 600]);  % Kich thuoc lon hon
+set(gcf, 'Position', [100, 100, 900, 650]);  % Kich thuoc lon hon
 
 end
 
