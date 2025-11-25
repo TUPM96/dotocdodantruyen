@@ -146,12 +146,14 @@ figure;
 ecart_type_matrix = [ecart_type'; ecart_type_Roth'; ecart_type_scot'; ...
                      ecart_type_Eckart'; ecart_type_phat'; ecart_type_ml'];
 % Tao grouped bar chart
-bar(ecart_type_matrix');
+h = bar(ecart_type_matrix');
 set(gca, 'XTickLabel', arrayfun(@(s) sprintf('%d dB', s), SNR, 'UniformOutput', false));
 xlabel('SNR (dB)', 'FontWeight', 'bold', 'FontSize', 12);
 ylabel('Do lech chuan (echantillon)', 'FontWeight', 'bold', 'FontSize', 12);
 title('So sanh Do lech chuan cua 6 phuong phap theo SNR', 'FontWeight', 'bold', 'FontSize', 14);
-legend('CC_time', 'ROTH', 'SCOT', 'ECKART', 'PHAT', 'HT', 'Location', 'best', 'FontSize', 10);
+if length(SNR) > 0
+    legend({'CC_time', 'ROTH', 'SCOT', 'ECKART', 'PHAT', 'HT'}, 'Location', 'best', 'FontSize', 10);
+end
 grid on;
 set(gcf, 'Position', [100, 100, 800, 600]);  % Kich thuoc lon hon
 
@@ -160,12 +162,14 @@ figure;
 % Tao ma tran du lieu: hang = phuong phap, cot = SNR
 EQM_matrix = [EQM'; EQM_Roth'; EQM_scot'; EQM_Eckart'; EQM_phat'; EQM_ml'];
 % Tao grouped bar chart
-bar(EQM_matrix');
+h = bar(EQM_matrix');
 set(gca, 'XTickLabel', arrayfun(@(s) sprintf('%d dB', s), SNR, 'UniformOutput', false));
 xlabel('SNR (dB)', 'FontWeight', 'bold', 'FontSize', 12);
 ylabel('EQM (RMSE) (echantillon)', 'FontWeight', 'bold', 'FontSize', 12);
 title('So sanh EQM cua 6 phuong phap theo SNR', 'FontWeight', 'bold', 'FontSize', 14);
-legend('CC_time', 'ROTH', 'SCOT', 'ECKART', 'PHAT', 'HT', 'Location', 'best', 'FontSize', 10);
+if length(SNR) > 0
+    legend({'CC_time', 'ROTH', 'SCOT', 'ECKART', 'PHAT', 'HT'}, 'Location', 'best', 'FontSize', 10);
+end
 grid on;
 set(gcf, 'Position', [100, 100, 900, 650]);  % Kich thuoc lon hon
 

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5.3. Kết quả mô phỏng</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            color: #000000;
+        }
+        h1 {
+            color: #000000;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        h2 {
+            color: #000000;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        h3 {
+            color: #000000;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        p {
+            text-align: justify;
+            margin-bottom: 12px;
+        }
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #000000;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        .note {
+            font-style: italic;
+            color: #666666;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+        .highlight {
+            font-weight: bold;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>5.3. Kết quả mô phỏng</h1>
+
+    <div class="section">
+        <h2>Bảng 1: Kết quả RMSE (echantillon) của 6 phương pháp tại các mức SNR khác nhau</h2>
+        <p>Bảng 1 trình bày kết quả RMSE (echantillon) của 6 phương pháp tại các mức SNR khác nhau:</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>SNR (dB)</th>
+                    <th>CC_time</th>
+                    <th>ROTH</th>
+                    <th>SCOT</th>
+                    <th>PHAT</th>
+                    <th>ECKART</th>
+                    <th>HT</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>0.4455</td>
+                    <td>1.8461</td>
+                    <td>1.8461</td>
+                    <td>4.4665</td>
+                    <td>0.4169</td>
+                    <td>0.4741</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>0.0875</td>
+                    <td>1.0690</td>
+                    <td>1.0690</td>
+                    <td>0.4666</td>
+                    <td>0.1357</td>
+                    <td>0.1292</td>
+                </tr>
+                <tr>
+                    <td>20</td>
+                    <td>0.0501</td>
+                    <td>0.5481</td>
+                    <td>0.5481</td>
+                    <td>0.0915</td>
+                    <td>0.0592</td>
+                    <td>0.0596</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="note"><strong>Ghi chú</strong>: Kết quả được tính từ 100 lần mô phỏng Monte Carlo với các tham số: N = 256 samples, Fs = 2048 Hz, τ_true = 4.9 samples, phổ Farina-Merletti (f_h=120Hz, f_l=60Hz).</p>
+    </div>
+
+    <div class="section">
+        <h2>Nhận xét kết quả</h2>
+        
+        <h3>1. So sánh hiệu năng các phương pháp</h3>
+        <ul>
+            <li><span class="highlight">ECKART</span> đạt RMSE thấp nhất ở SNR = 0 dB (0.4169) và SNR = 20 dB (0.0592), cho thấy hiệu quả tốt trong việc sử dụng phổ tín hiệu sạch và phổ nhiễu để thiết kế bộ lọc tối ưu.</li>
+            <li><span class="highlight">HT (Hannan-Thomson)</span> đạt RMSE thấp nhất ở SNR = 10 dB (0.1292) và gần bằng ECKART ở SNR = 20 dB (0.0596), xác nhận tính tối ưu lý thuyết của phương pháp Maximum Likelihood.</li>
+            <li><span class="highlight">CC_time</span> (Cross-Correlation trong miền thời gian) cho kết quả tốt ở SNR cao (20 dB: 0.0501) và trung bình (10 dB: 0.0875), nhưng kém hơn ở SNR thấp (0 dB: 0.4455). Phương pháp này đơn giản nhưng hiệu quả khi SNR ≥ 10 dB.</li>
+            <li><span class="highlight">PHAT</span> (Phase Transform) có hiệu năng kém ở SNR thấp (0 dB: 4.4665) do dễ bị ảnh hưởng bởi nhiễu pha, nhưng cải thiện đáng kể ở SNR cao (20 dB: 0.0915).</li>
+            <li><span class="highlight">SCOT</span> và <span class="highlight">ROTH</span> có hiệu năng tương đương nhau (RMSE giống hệt nhau), cho thấy cả hai phương pháp chuẩn hóa đều hoạt động tương tự trong điều kiện mô phỏng này. Tuy nhiên, cả hai đều có RMSE cao hơn các phương pháp khác, đặc biệt ở SNR thấp.</li>
+        </ul>
+
+        <h3>2. Ảnh hưởng của SNR</h3>
+        <ul>
+            <li>Tất cả phương pháp đều cải thiện đáng kể khi SNR tăng từ 0 dB lên 20 dB. RMSE giảm rõ rệt, đặc biệt ở khoảng 0-10 dB.</li>
+            <li>Với SNR = 20 dB, sai số RMSE < 0.1 samples cho hầu hết các phương pháp (trừ ROTH và SCOT), tương ứng độ chính xác CV cao.</li>
+            <li>Ở SNR thấp (0 dB), sự khác biệt giữa các phương pháp rõ rệt nhất. ECKART và CC_time vượt trội hơn so với các phương pháp còn lại, trong khi PHAT, ROTH và SCOT có sai số rất lớn.</li>
+            <li>Ở SNR trung bình (10 dB), CC_time, ECKART và HT cho kết quả tốt nhất, với RMSE < 0.15 samples.</li>
+            <li>Ở SNR cao (20 dB), tất cả phương pháp (trừ ROTH và SCOT) đều cho kết quả tốt, với RMSE < 0.1 samples. ECKART và HT đạt độ chính xác cao nhất.</li>
+        </ul>
+
+        <h3>3. Độ chính xác ước lượng</h3>
+        <ul>
+            <li>Với SNR = 20 dB và τ_true = 4.9 samples:
+                <ul>
+                    <li>ECKART: RMSE = 0.0592 samples → Độ chính xác cao nhất</li>
+                    <li>HT: RMSE = 0.0596 samples → Gần bằng ECKART</li>
+                    <li>CC_time: RMSE = 0.0501 samples → Tốt, đơn giản</li>
+                    <li>PHAT: RMSE = 0.0915 samples → Chấp nhận được</li>
+                </ul>
+            </li>
+            <li>Với SNR = 10 dB, CC_time (0.0875), ECKART (0.1357) và HT (0.1292) cho độ chính xác chấp nhận được.</li>
+            <li>Với SNR = 0 dB, chỉ ECKART (0.4169) và CC_time (0.4455) cho kết quả đáng tin cậy. Các phương pháp khác có sai số rất lớn.</li>
+        </ul>
+
+        <h3>4. Khuyến nghị sử dụng</h3>
+        <ul>
+            <li><span class="highlight">SNR cao (20 dB)</span>: Tất cả phương pháp (trừ ROTH và SCOT) đều cho kết quả tốt. Có thể sử dụng CC_time cho đơn giản hoặc ECKART/HT cho độ chính xác tối đa.</li>
+            <li><span class="highlight">SNR trung bình (10 dB)</span>: Nên sử dụng CC_time, ECKART hoặc HT. Tránh PHAT, ROTH và SCOT.</li>
+            <li><span class="highlight">SNR thấp (0 dB)</span>: Chỉ nên sử dụng ECKART hoặc CC_time. Các phương pháp khác không đáng tin cậy ở mức SNR này.</li>
+        </ul>
+
+        <h3>5. Hạn chế và quan sát</h3>
+        <ul>
+            <li>Kết quả mô phỏng dựa trên tín hiệu sEMG giả lập với phổ Farina-Merletti. Trong thực tế, phổ tín hiệu có thể khác, ảnh hưởng đến hiệu năng.</li>
+            <li>Số điểm tín hiệu N = 256 samples (125ms) có thể ngắn, ảnh hưởng đến độ chính xác của các phương pháp dựa trên phổ (ROTH, SCOT, PHAT).</li>
+            <li>Window size h_Length = 128 có thể nhỏ so với NFFT = 256, ảnh hưởng đến chất lượng ước lượng phổ trong phương pháp Welch.</li>
+            <li>Số lần lặp Monte Carlo = 100 có thể chưa đủ để ước lượng chính xác, đặc biệt với các phương pháp có phương sai cao như ROTH và SCOT.</li>
+            <li>ROTH và SCOT cho kết quả giống hệt nhau và có RMSE cao, có thể do vấn đề trong cách tính toán hoặc do điều kiện mô phỏng không phù hợp với các phương pháp này.</li>
+            <li>PHAT có sai số rất lớn ở SNR thấp (0 dB: 4.4665), cho thấy phương pháp này rất nhạy cảm với nhiễu pha khi SNR thấp.</li>
+        </ul>
+    </div>
+
+</body>
+</html>
+

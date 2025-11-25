@@ -16,15 +16,24 @@ function exportResults(ecart_type, ecart_type_Roth, ecart_type_scot, ecart_type_
                        delai_estime_phat, delai_estime_Eckart, delai_estime_ml)
 
 % ============================================================================
-% PHAN 1: TAO TEN FILE VOI THOI GIAN
+% PHAN 1: TAO THU MUC RESULT NEU CHUA CO
+% ============================================================================
+results_dir = 'result';
+if ~exist(results_dir, 'dir')
+    mkdir(results_dir);
+    fprintf('Da tao thu muc: %s\n', results_dir);
+end
+
+% ============================================================================
+% PHAN 2: TAO TEN FILE VOI THOI GIAN
 % ============================================================================
 timestamp = datestr(now, 'yyyy-mm-dd_HH-MM-SS');
 base_filename = sprintf('ket_qua_MFCV_%s', timestamp);
 
 % ============================================================================
-% PHAN 2: LUU DU LIEU RA FILE .MAT
+% PHAN 3: LUU DU LIEU RA FILE .MAT
 % ============================================================================
-mat_filename = [base_filename, '.mat'];
+mat_filename = fullfile(results_dir, [base_filename, '.mat']);
 save(mat_filename, ...
      'ecart_type', 'ecart_type_Roth', 'ecart_type_scot', 'ecart_type_phat', ...
      'ecart_type_Eckart', 'ecart_type_ml', ...
@@ -36,9 +45,9 @@ save(mat_filename, ...
 fprintf('Da luu du lieu ra file: %s\n', mat_filename);
 
 % ============================================================================
-% PHAN 3: XUAT DU LIEU RA FILE .TXT (DANG BANG)
+% PHAN 4: XUAT DU LIEU RA FILE .TXT (DANG BANG)
 % ============================================================================
-txt_filename = [base_filename, '.txt'];
+txt_filename = fullfile(results_dir, [base_filename, '.txt']);
 fid = fopen(txt_filename, 'w');
 
 % Ghi header
@@ -118,10 +127,10 @@ fclose(fid);
 fprintf('Da xuat du lieu ra file: %s\n', txt_filename);
 
 % ============================================================================
-% PHAN 4: XUAT DU LIEU RA FILE .XLSX (NEU CO MATLAB EXCEL SUPPORT)
+% PHAN 5: XUAT DU LIEU RA FILE .XLSX (NEU CO MATLAB EXCEL SUPPORT)
 % ============================================================================
 try
-    xlsx_filename = [base_filename, '.xlsx'];
+    xlsx_filename = fullfile(results_dir, [base_filename, '.xlsx']);
     
     % Tao bang du lieu cho Do lech chuan
     ecart_type_table = table(SNR', ecart_type', ecart_type_Roth', ecart_type_scot', ...
@@ -162,6 +171,59 @@ try
 catch ME
     fprintf('Khong the xuat file Excel. Loi: %s\n', ME.message);
     fprintf('Chi xuat duoc file .mat va .txt\n');
+end
+
+% ============================================================================
+% PHAN 6: XUAT DU LIEU RA FILE .CSV
+% ============================================================================
+try
+    % Tao bang du lieu cho Do lech chuan
+    ecart_type_table = table(SNR', ecart_type', ecart_type_Roth', ecart_type_scot', ...
+                             ecart_type_phat', ecart_type_Eckart', ecart_type_ml', ...
+                             'VariableNames', {'SNR_dB', 'CC_time', 'ROTH', 'SCOT', ...
+                             'PHAT', 'ECKART', 'HT'});
+    csv_filename_ecart = fullfile(results_dir, [base_filename, '_Do_lech_chuan.csv']);
+    writetable(ecart_type_table, csv_filename_ecart);
+    fprintf('Da xuat du lieu ra file: %s\n', csv_filename_ecart);
+    
+    % Tao bang du lieu cho EQM (RMSE)
+    EQM_table = table(SNR', EQM', EQM_Roth', EQM_scot', EQM_phat', ...
+                      EQM_Eckart', EQM_ml', ...
+                      'VariableNames', {'SNR_dB', 'CC_time', 'ROTH', 'SCOT', ...
+                      'PHAT', 'ECKART', 'HT'});
+    csv_filename_eqm = fullfile(results_dir, [base_filename, '_EQM_RMSE.csv']);
+    writetable(EQM_table, csv_filename_eqm);
+    fprintf('Da xuat du lieu ra file: %s\n', csv_filename_eqm);
+    
+    % Tao bang du lieu cho Bias
+    bias_table = table(SNR', bias', bias_Roth', bias_scot', bias_phat', ...
+                       bias_Eckart', bias_ml', ...
+                       'VariableNames', {'SNR_dB', 'CC_time', 'ROTH', 'SCOT', ...
+                       'PHAT', 'ECKART', 'HT'});
+    csv_filename_bias = fullfile(results_dir, [base_filename, '_Bias.csv']);
+    writetable(bias_table, csv_filename_bias);
+    fprintf('Da xuat du lieu ra file: %s\n', csv_filename_bias);
+    
+    % Tao bang du lieu cho Variance
+    Var_table = table(SNR', Var', Var_Roth', Var_scot', Var_phat', ...
+                      Var_Eckart', Var_ml', ...
+                      'VariableNames', {'SNR_dB', 'CC_time', 'ROTH', 'SCOT', ...
+                      'PHAT', 'ECKART', 'HT'});
+    csv_filename_var = fullfile(results_dir, [base_filename, '_Variance.csv']);
+    writetable(Var_table, csv_filename_var);
+    fprintf('Da xuat du lieu ra file: %s\n', csv_filename_var);
+    
+    % Tao bang du lieu cho Do tre uoc luong
+    delai_table = table(SNR', delai_estime', delai_estime_Roth', delai_estime_scot', ...
+                        delai_estime_phat', delai_estime_Eckart', delai_estime_ml', ...
+                        'VariableNames', {'SNR_dB', 'CC_time', 'ROTH', 'SCOT', ...
+                        'PHAT', 'ECKART', 'HT'});
+    csv_filename_delai = fullfile(results_dir, [base_filename, '_Do_tre_uoc_luong.csv']);
+    writetable(delai_table, csv_filename_delai);
+    fprintf('Da xuat du lieu ra file: %s\n', csv_filename_delai);
+    
+catch ME
+    fprintf('Khong the xuat file CSV. Loi: %s\n', ME.message);
 end
 
 fprintf('\nHoan thanh xuat du lieu!\n');
