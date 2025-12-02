@@ -15,43 +15,14 @@ Nm = N_MonteCarlo;     % Ten khac
 % Tham so tin hieu
 Duration = 0.125;      % Thoi luong mo phong (giay) = 125ms
 Fs = 2048;             % Tan so lay mau (Hz)
-nfft = 2048;           % Do dai FFT cho ham tfrstft
 N = Duration * Fs;     % So diem tin hieu = 256 mau
 p = 40;                % So he so cho bo loc tao do tre (dung trong sEMG_Generator)
 
 % Tham so phan tich tan so
-Bandwidth = [15 200];  % Dai tan so phan tich (Hz)
-RegLinStart = round(Bandwidth(1) * nfft / Fs + 1);  % Chi so bat dau cho hoi quy tuyen tinh
-RegLinStop = round(Bandwidth(2) * nfft / Fs + 1);   % Chi so ket thuc cho hoi quy tuyen tinh
-nF = (0:nfft-1) / nfft;  % Truc tan so chuan hoa (0 den 1)
-f = nF(RegLinStart:RegLinStop) * Fs;  % Chuyen doi truc tan so sang Hz
-n = 1:N;               % Truc tan so cho hien thi du lieu
 h_Length = [128];      % Kich thuoc cua so cho phuong phap Welch
 
-% Tham so soi co bap
-CV_Scale = [2 6];      % Khoang toc do dan truyen (m/s): min va max
-DeltaE = 5 * 10^(-3);  % Khoang cach giua dien cuc (m) = 5mm
-
-% Tham so xu ly do tre bien thien (neu co)
-phi = 0.0;             % Goc xoay (neu su dung)
-Nl = 5;                % So hang (neu su dung)
-Nc = 13;               % So cot (neu su dung)
-
-% Tinh CV va Delay (tu Parameter_Script_cohF.m)
-% Tinh CV theo cong thuc sin (neu can thiet cho do tre bien thien)
-CV = (CV_Scale(2) - CV_Scale(1))/2 * sin(2*pi*n/N) + (CV_Scale(2) + CV_Scale(1))/2;
-% Tinh Delay tu CV
-Delay = DeltaE * Fs ./ CV;  % Delay en m.s-1
-
-% Tham so loc va xu ly
-Est_Delta_CVmax = 1;   % Bien do toi da cho phep cua CV (m/s)
-Delay_Threshold = Est_Delta_CVmax / (Fs * DeltaE) * min(Delay).^2;  % Nguong do tre
-Delta = 10;            % So diem thoi gian cho trung binh hoa pha coherence
-Med_Windows = 20;      % Do rong cua so trung vi de loai bo diem bat thuong
-
-% Thiet lap do tre mong doi va CV mong doi
+% Thiet lap do tre mong doi
 delai_attendu = [4.9];  % Do tre mong doi (mau)
-CV_attendu = 5.10^-3 / (4.9/2048);  % CV mong doi (m/s)
 
 % Tham so mo phong
 SNR = [0 10 20];       % Cac muc SNR (dB)
@@ -75,30 +46,6 @@ delai_estime_scot = zeros(length(SNR), 1);    % Trung binh do tre - SCOT
 delai_estime_phat = zeros(length(SNR), 1);    % Trung binh do tre - PHAT
 delai_estime_Eckart = zeros(length(SNR), 1);  % Trung binh do tre - ECKART
 delai_estime_ml = zeros(length(SNR), 1);      % Trung binh do tre - HT
-
-% Cac bien luu gia tri cuc dai va vi tri cuc dai
-ccmaximum = zeros(Nm, 1);      % Gia tri cuc dai - CC_time
-Rothmaximum = zeros(Nm, 1);    % Gia tri cuc dai - ROTH
-Scotmaximum = zeros(Nm, 1);    % Gia tri cuc dai - SCOT
-phatmaximum = zeros(Nm, 1);    % Gia tri cuc dai - PHAT
-Eckartmaximum = zeros(Nm, 1);  % Gia tri cuc dai - ECKART
-mlmaximum = zeros(Nm, 1);     % Gia tri cuc dai - HT
-
-% Cac bien luu vi tri (index) cuc dai
-cctime = zeros(Nm, 1);         % Vi tri cuc dai - CC_time
-Rothtime = zeros(Nm, 1);       % Vi tri cuc dai - ROTH
-Scottime = zeros(Nm, 1);       % Vi tri cuc dai - SCOT
-phattime = zeros(Nm, 1);       % Vi tri cuc dai - PHAT
-Eckarttime = zeros(Nm, 1);     % Vi tri cuc dai - ECKART
-mltime = zeros(Nm, 1);         % Vi tri cuc dai - HT
-
-% Cac bien luu uoc luong do tre (truoc khi noi suy)
-ccestime = zeros(Nm, 1);       % Uoc luong do tre - CC_time
-Rothestime = zeros(Nm, 1);    % Uoc luong do tre - ROTH
-Scotestime = zeros(Nm, 1);    % Uoc luong do tre - SCOT
-phatestime = zeros(Nm, 1);     % Uoc luong do tre - PHAT
-Eckartestime = zeros(Nm, 1);  % Uoc luong do tre - ECKART
-mlestime = zeros(Nm, 1);       % Uoc luong do tre - HT
 
 % Cac bien luu bias (do lech so voi gia tri thuc)
 bias = zeros(length(SNR), 1);         % Bias - CC_time
@@ -135,9 +82,6 @@ EQM_ml = zeros(length(SNR), 1);     % RMSE - HT
 % ============================================================================
 % PHAN 4: TINH PSD LY THUYET (Mo hinh Farina-Merletti)
 % ============================================================================
-maximum = delai_attendu + 20;  % Gioi han tren cho hien thi
-minimum = delai_attendu - 20;  % Gioi han duoi cho hien thi
-
 fh = 120;  % Tan so cao (Hz)
 fl = 60;   % Tan so thap (Hz)
 k = 1;     % He so ty le
@@ -171,7 +115,7 @@ for ns = 1:length(SNR),  % Vong lap cho moi muc SNR
             % ====================================================================
             % Tao 4 kenh tin hieu sEMG voi do tre khac nhau
             % Su dung module signal
-            [Vec_Signal, T, b] = signal.sEMG_Generator('simu_semg', N, p, delai_attendu, Fs);
+            Vec_Signal = signal.sEMG_Generator('simu_semg', N, p, delai_attendu, Fs);
             s1 = Vec_Signal(:, 1);  % Kenh 1 (tham chieu, khong co do tre)
             s2 = Vec_Signal(:, 2);  % Kenh 2 (co do tre delai_attendu)
             
