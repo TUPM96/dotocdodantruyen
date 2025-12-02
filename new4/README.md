@@ -214,6 +214,99 @@ ROTH        |    0     |    ...     | ...  |   ...    |   ...   | ...
 ...
 ```
 
+### 4. Kết Quả Mẫu (Từ Lần Chạy Thực Tế)
+
+Dưới đây là kết quả từ một lần chạy thực tế với tham số mặc định:
+- **Số lần lặp Monte Carlo**: 100
+- **Độ trễ thực**: 4.9 mẫu
+- **Các mức SNR**: 0, 10, 20 dB
+
+#### 📊 Bảng 1: Độ Lệch Chuẩn (Ecart-type) - Đơn vị: Mẫu
+
+| SNR (dB) | CC_time | ROTH  | SCOT  | PHAT  | ECKART | HT    |
+|----------|---------|-------|-------|-------|--------|-------|
+| 0        | 0.7102  | 3.4328 | 3.4328 | 3.8728 | 0.4290 | 0.4535 |
+| 10       | 0.2196  | 1.2361 | 1.2361 | 0.4728 | 0.1314 | 0.1219 |
+| 20       | 0.1389  | 0.5707 | 0.5707 | 0.0729 | 0.0472 | 0.0422 |
+
+**Nhận xét**: 
+- Ở SNR thấp (0 dB): CC_time và ECKART/HT có độ lệch chuẩn thấp nhất
+- Ở SNR cao (20 dB): HT cho kết quả tốt nhất (0.0422), tiếp theo là ECKART (0.0472)
+- ROTH và SCOT có hiệu suất tương đương và kém hơn các phương pháp khác
+
+#### 📊 Bảng 2: RMSE (EQM) - Đơn vị: Mẫu
+
+| SNR (dB) | CC_time | ROTH  | SCOT  | PHAT  | ECKART | HT    |
+|----------|---------|-------|-------|-------|--------|-------|
+| 0        | 0.5462  | 3.4675 | 3.4675 | 3.9725 | 0.4294 | 0.4540 |
+| 10       | 0.0787  | 1.2625 | 1.2625 | 0.4837 | 0.1394 | 0.1358 |
+| 20       | 0.0379  | 0.5717 | 0.5717 | 0.0876 | 0.0612 | 0.0609 |
+
+**Nhận xét**:
+- HT và ECKART có RMSE thấp nhất ở mọi mức SNR
+- Ở SNR = 20 dB, HT đạt RMSE = 0.0609, tốt nhất trong tất cả các phương pháp
+- CC_time có hiệu suất tốt ở SNR thấp nhưng kém hơn ở SNR cao
+
+#### 📊 Bảng 3: Bias (Độ Lệch) - Đơn vị: Mẫu
+
+| SNR (dB) | CC_time | ROTH  | SCOT  | PHAT  | ECKART | HT    |
+|----------|---------|-------|-------|-------|--------|-------|
+| 0        | -0.2045 | 0.4896 | 0.4896 | 0.8843 | 0.0188 | 0.0211 |
+| 10       | -0.1746 | -0.2566| -0.2566| -0.1024| -0.0467| -0.0597|
+| 20       | -0.1363 | -0.0342| -0.0342| -0.0487| -0.0390| -0.0440|
+
+**Nhận xét**:
+- ECKART và HT có bias nhỏ nhất (gần 0) ở mọi mức SNR
+- CC_time có bias âm (ước lượng thấp hơn giá trị thực)
+- PHAT có bias lớn nhất ở SNR = 0 dB
+
+#### 📊 Bảng 4: Variance (Phương Sai) - Đơn vị: Mẫu²
+
+| SNR (dB) | CC_time | ROTH   | SCOT   | PHAT   | ECKART | HT     |
+|----------|---------|--------|--------|--------|--------|--------|
+| 0        | 0.5043  | 11.7840| 11.7840| 14.9985| 0.1841 | 0.2057 |
+| 10       | 0.0482  | 1.5280 | 1.5280 | 0.2235 | 0.0173 | 0.0149 |
+| 20       | 0.0193  | 0.3256 | 0.3256 | 0.0053 | 0.0022 | 0.0018 |
+
+**Nhận xét**:
+- HT có variance thấp nhất ở mọi mức SNR, cho thấy độ ổn định cao
+- ECKART cũng có variance rất thấp, chỉ kém HT một chút
+- ROTH và SCOT có variance cao, đặc biệt ở SNR thấp
+
+#### 📊 Bảng 5: Độ Trễ Ước Lượng (Delai Estime) - Đơn vị: Mẫu
+*(Giá trị thực: 4.9 mẫu)*
+
+| SNR (dB) | CC_time | ROTH  | SCOT  | PHAT  | ECKART | HT    |
+|----------|---------|-------|-------|-------|--------|-------|
+| 0        | 4.6955  | 5.3896 | 5.3896 | 5.7843 | 4.9188 | 4.9211 |
+| 10       | 4.7254  | 4.6434 | 4.6434 | 4.7976 | 4.8533 | 4.8403 |
+| 20       | 4.7637  | 4.8658 | 4.8658 | 4.8513 | 4.8610 | 4.8560 |
+
+**Nhận xét**:
+- Ở SNR = 20 dB, tất cả các phương pháp đều ước lượng gần với giá trị thực (4.9)
+- HT và ECKART có độ chính xác cao nhất
+- CC_time có xu hướng ước lượng thấp hơn giá trị thực
+
+#### 🏆 Kết Luận Từ Kết Quả Mẫu
+
+1. **Phương pháp tốt nhất tổng thể**: **HT (Hannan-Thomson)** và **ECKART**
+   - Có RMSE thấp nhất
+   - Có bias gần 0 nhất
+   - Có variance thấp nhất (ổn định nhất)
+
+2. **Phương pháp tốt ở SNR thấp**: **CC_time**
+   - Hiệu suất tốt ở SNR = 0 dB
+   - Đơn giản và nhanh
+
+3. **Phương pháp kém hiệu quả**: **ROTH** và **SCOT**
+   - Có variance và RMSE cao
+   - Hiệu suất tương đương nhau
+
+4. **Xu hướng chung**:
+   - Tất cả các phương pháp đều cải thiện khi SNR tăng
+   - Ở SNR cao (20 dB), sự khác biệt giữa các phương pháp giảm đi
+   - HT và ECKART luôn cho kết quả tốt nhất ở mọi mức SNR
+
 ## 📝 Giải Thích Các Chỉ Số
 
 ### 1. **Bias (Độ Lệch)**
