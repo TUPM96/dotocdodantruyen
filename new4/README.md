@@ -200,6 +200,22 @@ Trong thư mục `result/`, bạn sẽ tìm thấy:
   - Bảng so sánh các phương pháp
   - Giá trị bias, variance, standard deviation, RMSE cho từng mức SNR
 
+- **File `.xlsx`**: File Excel với 5 sheet riêng biệt
+  - **Sheet 1: Do_lech_chuan** - Độ lệch chuẩn của các phương pháp
+  - **Sheet 2: EQM_RMSE** - Sai số bình phương trung bình
+  - **Sheet 3: Bias** - Độ lệch so với giá trị thực
+  - **Sheet 4: Variance** - Phương sai
+  - **Sheet 5: Do_tre_uoc_luong** - Độ trễ ước lượng
+  - Mỗi sheet có cột SNR và các cột cho 6 phương pháp GCC
+  - Dễ dàng phân tích và vẽ biểu đồ trong Excel
+
+- **File `.csv`**: Các file CSV riêng biệt cho từng chỉ số
+  - `*_Do_lech_chuan.csv`
+  - `*_EQM_RMSE.csv`
+  - `*_Bias.csv`
+  - `*_Variance.csv`
+  - `*_Do_tre_uoc_luong.csv`
+
 ### 3. Định Dạng Kết Quả
 
 Kết quả được tổ chức theo cấu trúc:
